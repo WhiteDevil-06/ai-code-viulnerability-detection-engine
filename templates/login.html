@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - VulnScanner AI</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="nav-logo">🔐 <span>VulnScanner AI</span></a>
+        <div class="nav-links">
+            <button id="themeToggle" class="btn btn-secondary">🌓 Theme</button>
+        </div>
+    </nav>
+
+    <div class="container mt-4 flex" style="justify-content: center;">
+        <div class="card" style="width: 100%; max-width: 460px;">
+            <div class="text-center" style="margin-bottom: 2rem;">
+                <h2 id="authTitle" style="font-size: 2rem; margin-bottom: 0.5rem;">Welcome Back</h2>
+                <p id="authSubtitle" style="color: var(--text-secondary);">Sign in to access your security dashboard</p>
+            </div>
+            
+            <form id="loginForm" class="flex-col gap-1">
+                <input type="email" id="email" placeholder="you@example.com" required>
+                <input type="password" id="password" placeholder="Password" minlength="6" required>
+                
+                <button type="submit" id="authBtn" class="btn btn-primary" style="margin-top: 1rem;">Login</button>
+            </form>
+            
+            <div class="text-center mt-2">
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                    <span id="toggleText">Don't have an account?</span> 
+                    <a href="#" id="toggleSignup" style="color: var(--cyan); text-decoration: none; font-weight: bold;">Sign up</a>
+                </p>
+            </div>
+            <div id="authMessage" class="text-center mt-2 hidden" style="font-size: 0.9rem; padding: 10px; border-radius: 6px;"></div>
+        </div>
+    </div>
+
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

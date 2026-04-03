@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - VulnScanner AI</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="nav-logo">🔐 <span>VulnScanner AI</span></a>
+        <div class="nav-links">
+            <span id="userEmailDisplay" style="color: var(--text-secondary); font-size: 0.9rem;"></span>
+            <button id="themeToggle" class="btn btn-secondary">🌓 Theme</button>
+            <button id="btnLogout" class="btn btn-secondary">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container mt-2">
+        <div class="flex" style="justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <div>
+                <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem;">👋 Welcome, <span id="userName" style="color: var(--cyan);">User</span></h2>
+                <p style="color: var(--text-secondary);">Scan a repository or paste Python code to detect security vulnerabilities.</p>
+            </div>
+            <div id="engineStatus" style="background: rgba(104,211,145,0.1); border: 1px solid var(--green); color: var(--green); padding: 4px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold;">
+                ✅ AI Ready
+            </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem;">
+            <!-- GitHub Scan -->
+            <div class="card">
+                <h3 style="margin-bottom: 1rem;">🐙 GitHub Repository</h3>
+                <form id="repoForm" class="flex-col gap-1">
+                    <input type="text" id="repoUrl" placeholder="https://github.com/username/repo" required>
+                    <button type="submit" class="btn btn-primary" id="repoBtn">🔍 Scan Repository</button>
+                </form>
+            </div>
+            
+            <!-- Code Snippet Scan -->
+            <div class="card">
+                <h3 style="margin-bottom: 1rem;">📄 Paste Python Code</h3>
+                <form id="codeForm" class="flex-col gap-1">
+                    <textarea id="codeSnippet" rows="6" placeholder="# Paste Python code here..." required></textarea>
+                    <button type="submit" class="btn btn-primary" id="codeBtn">🔍 Analyse Code</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Notification Bar (Errors / Success) -->
+        <div id="scanStatus" class="mt-2 text-center hidden" style="padding: 12px; border-radius: 8px;"></div>
+
+        <!-- Scan Results Area -->
+        <div id="resultArea" class="mt-4 hidden card" style="border-color: var(--cyan-dim);">
+            <h3 style="margin-bottom: 1.5rem;">📋 Scan Report Output</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                <div class="card text-center" style="padding: 1rem;"><h2 id="resFiles" style="color: var(--cyan); font-size: 2rem;">0</h2><div style="color: var(--text-secondary); font-size: 0.9rem;">Files Scanned</div></div>
+                <div class="card text-center" style="padding: 1rem;"><h2 id="resVulns" style="color: var(--red); font-size: 2rem;">0</h2><div style="color: var(--text-secondary); font-size: 0.9rem;">Vulnerabilities</div></div>
+                <div class="card text-center" style="padding: 1rem;"><h2 id="resClean" style="color: var(--green); font-size: 2rem;">0</h2><div style="color: var(--text-secondary); font-size: 0.9rem;">Clean Files</div></div>
+                <div class="card text-center" style="padding: 1rem;"><h2 id="resRisk" style="color: var(--amber); font-size: 1.8rem; margin-top: 5px;">SAFE</h2><div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 4px;">Risk Level</div></div>
+            </div>
+            
+            <div id="vulnList" class="hidden">
+                <h4 style="margin-bottom: 1rem; color: var(--red);">🚨 Vulnerabilities Detected</h4>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; text-align: left; border-collapse: collapse;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--border);">
+                                <th style="padding: 12px; color: var(--text-muted);">File</th>
+                                <th style="padding: 12px; color: var(--text-muted);">Type</th>
+                                <th style="padding: 12px; color: var(--text-muted);">Confidence</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vulnTableBody">
+                            <!-- Injected rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="cleanState" class="hidden text-center" style="padding: 2rem;">
+                <div style="font-size: 3rem;">✅</div>
+                <h3 style="color: var(--green); margin-top: 1rem;">No Vulnerabilities Found!</h3>
+                <p style="color: var(--text-secondary);">All scanned code appears to be clean.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
