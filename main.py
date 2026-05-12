@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from dotenv import load_dotenv
 
 # Lazy load models so server boots instantly
@@ -29,15 +29,21 @@ app = Flask(__name__)
 # Placeholder responses until new templates are delivered.
 @app.route('/')
 def home():
-    return "<h2>Sentinel AI — Frontend coming soon.</h2>", 200
+    return render_template('index.html')
 
 @app.route('/login')
 def login():
-    return "<h2>Login — Sentinel AI frontend coming soon.</h2>", 200
+    # Login page was requested to be skipped, we just redirect to home or dashboard,
+    # but the instructions say "Pages to Build (NO LOGIN)"
+    return render_template('index.html')
 
 @app.route('/dashboard')
 def dashboard():
-    return "<h2>Dashboard — Sentinel AI frontend coming soon.</h2>", 200
+    return render_template('dashboard.html')
+
+@app.route('/docs')
+def docs():
+    return render_template('docs.html')
 
 # --- API Endpoints ---
 @app.route('/api/status', methods=['GET'])
