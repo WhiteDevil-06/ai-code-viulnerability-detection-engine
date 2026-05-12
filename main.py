@@ -29,15 +29,15 @@ app = Flask(__name__)
 # Placeholder responses until new templates are delivered.
 @app.route('/')
 def home():
-    return "<h2>VulnScanner AI — Frontend coming soon.</h2>", 200
+    return "<h2>Sentinel AI — Frontend coming soon.</h2>", 200
 
 @app.route('/login')
 def login():
-    return "<h2>Login — Frontend coming soon.</h2>", 200
+    return "<h2>Login — Sentinel AI frontend coming soon.</h2>", 200
 
 @app.route('/dashboard')
 def dashboard():
-    return "<h2>Dashboard — Frontend coming soon.</h2>", 200
+    return "<h2>Dashboard — Sentinel AI frontend coming soon.</h2>", 200
 
 # --- API Endpoints ---
 @app.route('/api/status', methods=['GET'])
