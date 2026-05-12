@@ -1,5 +1,16 @@
 env/
 __pycache__/
-dataset/
-*.csv
-.env
+*.pyc
+
+# Dataset raw samples (generated, not tracked)
+data/raw/
+
+# Trained model binaries (large files)
+models/
+
+# CSV datasets
+data/*.csv
+
+# Secrets
+.env
+

@@ -12,7 +12,7 @@ import tempfile
 import zipfile
 import io
 import requests
-from scanner import CodeScanner
+from app.scanner import CodeScanner
 
 
 class GitHubScanner:

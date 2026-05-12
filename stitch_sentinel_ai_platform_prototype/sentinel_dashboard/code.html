@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sentinel Security Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Geist:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #09090B;
+            color: #e7e0ed;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .obsidian-card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%), #111827;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .syntax-string { color: #d0bcff; }
+        .syntax-keyword { color: #7bd0ff; }
+        .syntax-comment { color: #958ea0; }
+        .vulnerable-line { background: rgba(147, 0, 10, 0.2); border-left: 3px solid #ffb4ab; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#1d1a23",
+                        "on-secondary-container": "#00374d",
+                        "on-tertiary": "#482900",
+                        "surface": "#15121b",
+                        "surface-container": "#211e27",
+                        "primary-fixed": "#e9ddff",
+                        "tertiary": "#ffb869",
+                        "on-tertiary-fixed-variant": "#673d00",
+                        "on-secondary-fixed-variant": "#004c69",
+                        "on-primary-container": "#340080",
+                        "on-error": "#690005",
+                        "surface-tint": "#d0bcff",
+                        "on-primary-fixed-variant": "#5516be",
+                        "secondary-fixed": "#c4e7ff",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed-dim": "#ffb869",
+                        "tertiary-fixed": "#ffdcbb",
+                        "surface-container-lowest": "#0f0d15",
+                        "secondary": "#7bd0ff",
+                        "on-error-container": "#ffdad6",
+                        "surface-variant": "#37333d",
+                        "on-tertiary-fixed": "#2c1700",
+                        "inverse-primary": "#6d3bd7",
+                        "surface-container-highest": "#37333d",
+                        "secondary-fixed-dim": "#7bd0ff",
+                        "inverse-on-surface": "#322f39",
+                        "tertiary-container": "#ca801e",
+                        "primary-fixed-dim": "#d0bcff",
+                        "on-surface": "#e7e0ed",
+                        "inverse-surface": "#e7e0ed",
+                        "surface-dim": "#15121b",
+                        "on-secondary-fixed": "#001e2c",
+                        "on-primary": "#3c0091",
+                        "on-surface-variant": "#cbc3d7",
+                        "on-tertiary-container": "#3f2300",
+                        "on-primary-fixed": "#23005c",
+                        "outline": "#958ea0",
+                        "outline-variant": "#494454",
+                        "surface-bright": "#3b3742",
+                        "error-container": "#93000a",
+                        "on-background": "#e7e0ed",
+                        "on-secondary": "#00354a",
+                        "primary": "#d0bcff",
+                        "surface-container-high": "#2c2832",
+                        "secondary-container": "#00a6e0",
+                        "primary-container": "#a078ff",
+                        "background": "#15121b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "base_unit": "4px",
+                        "margin_mobile": "16px",
+                        "gutter": "24px",
+                        "margin_desktop": "40px",
+                        "container_max_width": "1440px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "body-sm": ["Inter"],
+                        "mono-label": ["JetBrains Mono"],
+                        "body-base": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-body-base text-on-surface selection:bg-primary/30">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 flex flex-col justify-between py-8 px-4 bg-surface-container-low/90 backdrop-blur-xl h-[calc(100vh-32px)] w-64 m-4 rounded-xl border-r border-white/10 shadow-xl z-40">
+<div class="space-y-8">
+<div class="px-4">
+<h1 class="font-display-lg text-primary text-xl font-bold tracking-tight">Sentinel Console</h1>
+<p class="text-[11px] font-mono-label text-outline uppercase tracking-widest mt-1 opacity-70">Enterprise Security</p>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary border-l-4 border-primary rounded-r-lg font-medium transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-body-base">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 transition-all duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="text-body-base">Reports</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 transition-all duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-body-base">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 transition-all duration-200 hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="text-body-base">Docs</span>
+</a>
+</nav>
+</div>
+<div class="px-4 space-y-6">
+<button class="w-full py-3 px-4 bg-primary text-on-primary font-semibold rounded-lg shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity">
+                Upgrade Plan
+            </button>
+<div class="flex items-center gap-3 pt-6 border-t border-white/10">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden border border-outline-variant">
+<img alt="Developer Profile" data-alt="A professional headshot of a software security engineer in a high-tech office setting. The lighting is dramatic and cool-toned, reflecting a sophisticated command center environment. The background shows blurred server racks and digital monitors. The overall mood is focused and technically intelligent." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlztR1ARra1H-tB4UetaGvxRFLyUg-CDcR8UCpuZ8hFkEuVaV3R2xNFXIZO2Vu4qbZUsqhF-s0LSYnRnsygM4Ib9oiwu7AfD7DBqmR5JyiXzEyuDNEKc5NTKtiNVh33F3CqSJJhiiX4WqT34185TiRqmiVJgdkuHUiuO_5qwb0MD7YO0VMCmOnJXaw0mq08riMy-KC0tsYxDPfEWCb8e2jQ_PsYW-dmTNIZAsn0dnMdkLMvAu9J7U4nGJ16zHe6BXZ-HQcvZ9EGKA"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-semibold truncate">Alex Chen</p>
+<a class="flex items-center gap-1 text-[11px] text-on-surface-variant hover:text-primary" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="logout">logout</span>
+                        Sign Out
+                    </a>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-72 mr-margin_desktop pt-24 pb-margin_desktop min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-72 right-0 z-30 flex justify-between items-center px-6 py-3 bg-surface-container-lowest/80 backdrop-blur-md rounded-full mt-4 mx-margin_desktop border border-outline-variant/20 shadow-2xl">
+<div class="flex items-center gap-6">
+<span class="font-display-lg text-headline-md font-bold tracking-tight text-primary">Sentinel</span>
+<nav class="hidden md:flex items-center gap-4 text-body-sm">
+<a class="text-primary font-semibold border-b-2 border-primary pb-1" href="#">Home</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors" href="#">Dashboard</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors" href="#">Docs</a>
+</nav>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 text-on-surface-variant hover:bg-surface-variant/30 rounded-full transition-all text-body-sm font-medium">API Access</button>
+<button class="px-6 py-2 bg-primary text-on-primary font-bold rounded-full scale-95 active:scale-90 transition-transform">Start Scan</button>
+<div class="h-6 w-[1px] bg-outline-variant/30 mx-2"></div>
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant/30 rounded-full" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant/30 rounded-full" data-icon="account_circle">account_circle</button>
+</div>
+</header>
+<!-- Workspace Layout -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Scan Input Area -->
+<section class="col-span-12 obsidian-card p-gutter rounded-xl">
+<div class="flex flex-col md:flex-row gap-4 items-end">
+<div class="flex-1 space-y-2">
+<label class="text-mono-label text-outline uppercase">Repository Analysis</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline" data-icon="link">link</span>
+<input class="w-full bg-black/40 border border-outline-variant/30 rounded-lg py-3 pl-12 pr-4 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" placeholder="https://github.com/organization/secure-api-gateway" type="text"/>
+</div>
+</div>
+<button class="bg-primary-container text-on-primary-container px-8 py-3 rounded-lg font-bold flex items-center gap-2 hover:brightness-110 transition-all">
+<span class="material-symbols-outlined" data-icon="bolt" data-weight="fill">bolt</span>
+                        Run Analysis
+                    </button>
+</div>
+</section>
+<!-- Code Analysis Panel (Left) -->
+<div class="col-span-12 lg:col-span-8 space-y-gutter">
+<section class="obsidian-card rounded-xl overflow-hidden">
+<div class="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/5">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="code">code</span>
+<h3 class="font-headline-md text-base font-semibold">src/auth/jwt_validator.js</h3>
+</div>
+<div class="flex gap-2">
+<span class="px-2 py-1 bg-error-container/20 text-error text-[10px] font-mono border border-error/20 rounded">Critical Vulnerability</span>
+</div>
+</div>
+<div class="bg-[#050505] p-6 font-mono-label text-body-sm leading-relaxed overflow-x-auto min-h-[400px]">
+<div class="flex gap-6">
+<div class="text-outline/40 text-right select-none space-y-1">
+<div>102</div><div>103</div><div>104</div><div>105</div><div>106</div><div>107</div><div>108</div><div>109</div><div>110</div><div>111</div>
+</div>
+<div class="flex-1 space-y-1">
+<div><span class="syntax-keyword">const</span> jwt = <span class="syntax-keyword">require</span>(<span class="syntax-string">'jsonwebtoken'</span>);</div>
+<div><span class="syntax-keyword">const</span> SECRET = process.env.SECRET_KEY;</div>
+<div class="syntax-comment">// Validate user session token</div>
+<div><span class="syntax-keyword">function</span> <span class="text-secondary">verifyToken</span>(token) {</div>
+<div class="vulnerable-line px-2 -mx-2 rounded">
+<span class="syntax-keyword">return</span> jwt.verify(token, SECRET, { algorithms: [<span class="syntax-string">'HS256'</span>, <span class="syntax-string">'none'</span>] });
+                                </div>
+<div>}</div>
+<div class="syntax-comment">// Log access for auditing</div>
+<div><span class="syntax-keyword">const</span> logger = <span class="syntax-keyword">require</span>(<span class="syntax-string">'./logger'</span>);</div>
+<div>logger.info(<span class="syntax-string">'Token verification initiated'</span>);</div>
+</div>
+</div>
+</div>
+<div class="p-6 bg-surface-container-high/50 border-t border-white/5">
+<div class="flex gap-4 items-start">
+<div class="p-2 bg-error-container/20 rounded-lg">
+<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+</div>
+<div class="space-y-2">
+<h4 class="font-bold text-on-surface">Broken Authentication: Algorithm Confusion</h4>
+<p class="text-on-surface-variant text-body-sm">The implementation allows the <code class="bg-black/40 px-1 rounded">none</code> algorithm which permits attackers to bypass signature verification by crafting an unsigned token.</p>
+<div class="pt-2">
+<h5 class="text-mono-label text-primary uppercase text-[10px] tracking-widest mb-1">Recommendation</h5>
+<p class="text-body-sm border-l-2 border-primary pl-4 py-1 italic opacity-90">Explicitly whitelist only strong algorithms: <code class="text-secondary">algorithms: ['HS256']</code></p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Incident Table -->
+<section class="obsidian-card rounded-xl p-gutter">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-md text-base font-bold">Detected Vulnerabilities</h3>
+<button class="text-primary text-body-sm hover:underline">Export Full CSV</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="text-mono-label text-outline uppercase text-[10px] border-b border-outline-variant/30">
+<th class="pb-4 font-medium">Type</th>
+<th class="pb-4 font-medium">Location</th>
+<th class="pb-4 font-medium">AI Confidence</th>
+<th class="pb-4 font-medium text-right">Status</th>
+</tr>
+</thead>
+<tbody class="text-body-sm">
+<tr class="border-b border-white/5 hover:bg-white/5 transition-colors group">
+<td class="py-4 font-semibold text-error">SQL Injection</td>
+<td class="py-4 text-on-surface-variant">/api/v1/user_profile.js:42</td>
+<td class="py-4">
+<div class="flex items-center gap-2">
+<div class="w-16 h-1 bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[98%]"></div>
+</div>
+<span class="text-[11px]">98.2%</span>
+</div>
+</td>
+<td class="py-4 text-right">
+<span class="px-3 py-1 bg-surface-variant/50 text-on-surface-variant rounded-full text-[10px]">Open</span>
+</td>
+</tr>
+<tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+<td class="py-4 font-semibold text-tertiary">XSS (Stored)</td>
+<td class="py-4 text-on-surface-variant">/views/comments.html:12</td>
+<td class="py-4">
+<div class="flex items-center gap-2">
+<div class="w-16 h-1 bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[84%]"></div>
+</div>
+<span class="text-[11px]">84.0%</span>
+</div>
+</td>
+<td class="py-4 text-right">
+<span class="px-3 py-1 bg-primary/20 text-primary rounded-full text-[10px]">Fixing</span>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="py-4 font-semibold text-secondary">Insecure CORS</td>
+<td class="py-4 text-on-surface-variant">config/cors_policy.rb:8</td>
+<td class="py-4">
+<div class="flex items-center gap-2">
+<div class="w-16 h-1 bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[72%]"></div>
+</div>
+<span class="text-[11px]">72.5%</span>
+</div>
+</td>
+<td class="py-4 text-right">
+<span class="px-3 py-1 bg-surface-variant/50 text-on-surface-variant rounded-full text-[10px]">Muted</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+<!-- Sidebar (Right) -->
+<div class="col-span-12 lg:col-span-4 space-y-gutter">
+<!-- Status Card -->
+<section class="glass-panel p-6 rounded-xl relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[60px]"></div>
+<div class="flex items-center gap-4 mb-8">
+<div class="relative w-16 h-16 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-white/10" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-primary transition-all duration-1000" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="175" stroke-dashoffset="45" stroke-width="4"></circle>
+</svg>
+<span class="absolute text-xs font-bold">74%</span>
+</div>
+<div>
+<h3 class="font-bold text-on-surface">Analysis Active</h3>
+<p class="text-body-sm text-on-surface-variant">Phase: Pattern Matching</p>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center text-body-sm">
+<span class="text-on-surface-variant">Files Scanned</span>
+<span class="font-mono text-secondary">1,242 / 1,650</span>
+</div>
+<div class="flex justify-between items-center text-body-sm">
+<span class="text-on-surface-variant">Engine Speed</span>
+<span class="font-mono text-secondary">485 files/sec</span>
+</div>
+<div class="flex justify-between items-center text-body-sm">
+<span class="text-on-surface-variant">Elapsed Time</span>
+<span class="font-mono text-secondary">00:42.12</span>
+</div>
+</div>
+</section>
+<!-- Analytics Summary -->
+<section class="obsidian-card p-6 rounded-xl">
+<h4 class="text-mono-label text-outline uppercase mb-4">Risk Distribution</h4>
+<div class="flex items-end gap-2 h-32 mb-6">
+<div class="flex-1 bg-error/20 border-t-2 border-error h-[90%] rounded-t-sm"></div>
+<div class="flex-1 bg-tertiary/20 border-t-2 border-tertiary h-[60%] rounded-t-sm"></div>
+<div class="flex-1 bg-secondary/20 border-t-2 border-secondary h-[40%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary/20 border-t-2 border-primary h-[25%] rounded-t-sm"></div>
+<div class="flex-1 bg-outline/20 border-t-2 border-outline h-[15%] rounded-t-sm"></div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-4 bg-surface-container rounded-lg border border-white/5">
+<p class="text-[10px] text-outline uppercase">Critical</p>
+<p class="text-2xl font-bold text-error">12</p>
+</div>
+<div class="p-4 bg-surface-container rounded-lg border border-white/5">
+<p class="text-[10px] text-outline uppercase">High</p>
+<p class="text-2xl font-bold text-tertiary">28</p>
+</div>
+</div>
+</section>
+<!-- Recent Alerts -->
+<section class="space-y-3">
+<h4 class="text-mono-label text-outline uppercase px-2">Vulnerability Feed</h4>
+<div class="obsidian-card p-4 rounded-xl flex gap-4 items-start hover:bg-white/5 transition-colors cursor-pointer border-l-4 border-error">
+<div class="p-2 bg-error/10 rounded">
+<span class="material-symbols-outlined text-error text-sm" data-icon="policy">policy</span>
+</div>
+<div>
+<p class="text-body-sm font-semibold">Hardcoded Secrets</p>
+<p class="text-[11px] text-on-surface-variant">config/database.yml • 2 mins ago</p>
+<div class="mt-2 flex items-center gap-1">
+<span class="px-1.5 py-0.5 bg-black/40 text-[9px] font-mono rounded">Confidence: 99%</span>
+</div>
+</div>
+</div>
+<div class="obsidian-card p-4 rounded-xl flex gap-4 items-start hover:bg-white/5 transition-colors cursor-pointer border-l-4 border-tertiary">
+<div class="p-2 bg-tertiary/10 rounded">
+<span class="material-symbols-outlined text-tertiary text-sm" data-icon="security">security</span>
+</div>
+<div>
+<p class="text-body-sm font-semibold">Weak Encryption</p>
+<p class="text-[11px] text-on-surface-variant">lib/crypt.py • 15 mins ago</p>
+<div class="mt-2 flex items-center gap-1">
+<span class="px-1.5 py-0.5 bg-black/40 text-[9px] font-mono rounded">Confidence: 82%</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Footer (Embedded in Main Canvas) -->
+<footer class="ml-72 mr-margin_desktop border-t border-outline-variant/10 py-12 px-margin_desktop flex flex-col md:flex-row justify-between items-center gap-gutter text-body-sm text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="font-display-lg text-lg font-bold text-on-surface">Sentinel</span>
+<span class="opacity-50">|</span>
+<span>© 2024 Sentinel Security Platform. All rights reserved.</span>
+</div>
+<div class="flex items-center gap-6">
+<a class="hover:text-primary transition-colors" href="#">Docs</a>
+<a class="hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="hover:text-primary transition-colors" href="#">GitHub</a>
+<a class="hover:text-primary transition-colors" href="#">Terms</a>
+<a class="hover:text-primary transition-colors" href="#">Privacy</a>
+</div>
+</footer>
+</body></html>

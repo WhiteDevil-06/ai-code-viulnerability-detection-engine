@@ -4,7 +4,7 @@ import random
 import pandas as pd
 
 # Define the dataset directories we created
-BASE_DIR = "dataset"
+BASE_DIR = "data/raw"
 CATEGORIES = {
     "safe": 0,
     "sql_injection": 1,
@@ -119,7 +119,7 @@ def build_csv():
                 })
                 
     df = pd.DataFrame(data)
-    csv_path = "dataset.csv"
+    csv_path = "data/dataset.csv"
     df.to_csv(csv_path, index=False)
     print(f"[+] Successfully created {csv_path} with {len(df)} records.")
     print("\nClass Distribution:")

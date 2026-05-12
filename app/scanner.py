@@ -3,7 +3,7 @@ import joblib
 import re
 
 class CodeScanner:
-    def __init__(self, model_path='vulnerability_rf_model.pkl', vectorizer_path='tfidf_vectorizer.pkl'):
+    def __init__(self, model_path='models/vulnerability_rf_model.pkl', vectorizer_path='models/tfidf_vectorizer.pkl'):
         """
         Initialize the Vulnerability Scanner by loading the exported ML models.
         """
@@ -106,8 +106,8 @@ if __name__ == "__main__":
     print("\n[+] Running automated engine tests...")
     
     test_files = [
-        "dataset/sql_injection/sample_0.py",
-        "dataset/safe/sample_0.py"
+        "data/raw/sql_injection/sample_0.py",
+        "data/raw/safe/sample_0.py"
     ]
     
     for test_file in test_files:

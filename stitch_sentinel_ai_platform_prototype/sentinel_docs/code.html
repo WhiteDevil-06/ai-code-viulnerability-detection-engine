@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Geist:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #09090B;
+            color: #e7e0ed;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-card {
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .code-block {
+            background: #050505;
+            border: 1px solid rgba(208, 188, 255, 0.2);
+            box-shadow: 0 0 15px rgba(208, 188, 255, 0.05);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #d0bcff 0%, #7bd0ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f0d15;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #37333d;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#1d1a23",
+                        "on-secondary-container": "#00374d",
+                        "on-tertiary": "#482900",
+                        "surface": "#15121b",
+                        "surface-container": "#211e27",
+                        "primary-fixed": "#e9ddff",
+                        "tertiary": "#ffb869",
+                        "on-tertiary-fixed-variant": "#673d00",
+                        "on-secondary-fixed-variant": "#004c69",
+                        "on-primary-container": "#340080",
+                        "on-error": "#690005",
+                        "surface-tint": "#d0bcff",
+                        "on-primary-fixed-variant": "#5516be",
+                        "secondary-fixed": "#c4e7ff",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed-dim": "#ffb869",
+                        "tertiary-fixed": "#ffdcbb",
+                        "surface-container-lowest": "#0f0d15",
+                        "secondary": "#7bd0ff",
+                        "on-error-container": "#ffdad6",
+                        "surface-variant": "#37333d",
+                        "on-tertiary-fixed": "#2c1700",
+                        "inverse-primary": "#6d3bd7",
+                        "surface-container-highest": "#37333d",
+                        "secondary-fixed-dim": "#7bd0ff",
+                        "inverse-on-surface": "#322f39",
+                        "tertiary-container": "#ca801e",
+                        "primary-fixed-dim": "#d0bcff",
+                        "on-surface": "#e7e0ed",
+                        "inverse-surface": "#e7e0ed",
+                        "surface-dim": "#15121b",
+                        "on-secondary-fixed": "#001e2c",
+                        "on-primary": "#3c0091",
+                        "on-surface-variant": "#cbc3d7",
+                        "on-tertiary-container": "#3f2300",
+                        "on-primary-fixed": "#23005c",
+                        "outline": "#958ea0",
+                        "outline-variant": "#494454",
+                        "surface-bright": "#3b3742",
+                        "error-container": "#93000a",
+                        "on-background": "#e7e0ed",
+                        "on-secondary": "#00354a",
+                        "primary": "#d0bcff",
+                        "surface-container-high": "#2c2832",
+                        "secondary-container": "#00a6e0",
+                        "primary-container": "#a078ff",
+                        "background": "#15121b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "base_unit": "4px",
+                        "margin_mobile": "16px",
+                        "gutter": "24px",
+                        "margin_desktop": "40px",
+                        "container_max_width": "1440px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "body-sm": ["Inter"],
+                        "mono-label": ["JetBrains Mono"],
+                        "body-base": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                        "body-sm": ["13px", {"lineHeight": "1.5", "letterSpacing": "0.01em", "fontWeight": "400"}],
+                        "mono-label": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "body-base": ["15px", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background font-body-base text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-6 py-3 bg-surface-container-lowest/80 backdrop-blur-md rounded-full mt-4 mx-auto w-[95%] max-w-container_max_width border border-outline-variant/20 shadow-2xl">
+<div class="flex items-center gap-8">
+<div class="font-display-lg text-headline-md font-bold tracking-tight text-primary">Sentinel</div>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-body-base text-body-base hover:bg-surface-variant/30 rounded-full px-3 py-1 transition-all" href="#">Home</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-body-base text-body-base hover:bg-surface-variant/30 rounded-full px-3 py-1 transition-all" href="#">Dashboard</a>
+<a class="text-primary font-semibold border-b-2 border-primary pb-1 font-body-base text-body-base" href="#">Docs</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">account_circle</span>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-semibold scale-95 active:scale-90 transition-transform">Start Scan</button>
+</div>
+</nav>
+<div class="flex pt-32 max-w-container_max_width mx-auto px-margin_desktop min-h-screen">
+<!-- Left Sidebar Navigation -->
+<aside class="hidden lg:block w-64 fixed h-[calc(100vh-140px)] overflow-y-auto pr-4 border-r border-outline-variant/10">
+<div class="space-y-8">
+<div>
+<h3 class="font-mono-label text-mono-label uppercase text-outline mb-4">Introduction</h3>
+<ul class="space-y-2">
+<li><a class="block py-1.5 px-3 rounded-lg bg-primary/10 text-primary border-l-4 border-primary font-medium" href="#overview">Overview</a></li>
+<li><a class="block py-1.5 px-3 text-on-surface-variant hover:text-primary transition-colors" href="#how-it-works">How Sentinel Works</a></li>
+</ul>
+</div>
+<div>
+<h3 class="font-mono-label text-mono-label uppercase text-outline mb-4">Machine Learning</h3>
+<ul class="space-y-2">
+<li><a class="block py-1.5 px-3 text-on-surface-variant hover:text-primary transition-colors" href="#ml-models">ML Engine Architecture</a></li>
+<li><a class="block py-1.5 px-3 text-on-surface-variant hover:text-primary transition-colors" href="#tf-idf">Vectorization (TF-IDF)</a></li>
+<li><a class="block py-1.5 px-3 text-on-surface-variant hover:text-primary transition-colors" href="#random-forest">Random Forest Logic</a></li>
+</ul>
+</div>
+<div>
+<h3 class="font-mono-label text-mono-label uppercase text-outline mb-4">Implementation</h3>
+<ul class="space-y-2">
+<li><a class="block py-1.5 px-3 text-on-surface-variant hover:text-primary transition-colors" href="#usage-guide">Usage Guide</a></li>
+<li><a class="block py-1.5 px-3 text-on-surface-variant hover:text-primary transition-colors" href="#api">API Reference</a></li>
+</ul>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="lg:ml-72 flex-1 max-w-3xl pb-24">
+<!-- Header -->
+<section class="mb-16" id="overview">
+<div class="flex items-center gap-2 mb-4">
+<span class="bg-primary/10 text-primary px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase border border-primary/20">v2.4.0 stable</span>
+</div>
+<h1 class="font-display-lg text-display-lg mb-6 leading-tight">Sentinel Documentation</h1>
+<p class="text-on-surface-variant text-xl leading-relaxed font-body-base">
+                    Sentinel is an enterprise-grade security intelligence engine designed to detect, analyze, and neutralize advanced persistent threats (APTs) in real-time using distributed machine learning clusters.
+                </p>
+</section>
+<!-- How it works -->
+<section class="mb-20" id="how-it-works">
+<h2 class="font-headline-md text-headline-md mb-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">account_tree</span>
+                    How Sentinel Works
+                </h2>
+<div class="glass-card p-8 rounded-xl mb-8 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-20 -mt-20"></div>
+<p class="mb-6">The architecture is split into three distinct layers: Ingestion, Analysis, and Remediation. Sentinel uses a multi-head attention mechanism to process network telemetry without the latency associated with traditional deep packet inspection.</p>
+<div class="border border-outline-variant/20 rounded-xl bg-black/40 p-6 flex flex-col items-center justify-center gap-8">
+<!-- Simplified Architecture Diagram Component -->
+<div class="grid grid-cols-3 gap-4 w-full">
+<div class="flex flex-col items-center p-4 border border-outline-variant/10 bg-surface-container rounded-lg">
+<span class="material-symbols-outlined text-primary mb-2">sensors</span>
+<span class="text-xs font-mono-label">Ingest</span>
+</div>
+<div class="flex flex-col items-center p-4 border border-outline-variant/10 bg-surface-container rounded-lg">
+<span class="material-symbols-outlined text-secondary mb-2">psychology</span>
+<span class="text-xs font-mono-label">Analyze</span>
+</div>
+<div class="flex flex-col items-center p-4 border border-outline-variant/10 bg-surface-container rounded-lg">
+<span class="material-symbols-outlined text-tertiary mb-2">gpp_maybe</span>
+<span class="text-xs font-mono-label">Neutralize</span>
+</div>
+</div>
+<img alt="Cybersecurity Hub" class="w-full h-48 object-cover rounded-lg" data-alt="A futuristic cybersecurity command center interface with floating digital data nodes and glowing blue and violet network strands representing data ingestion and analysis. The atmosphere is sleek, professional, and high-tech with a deep obsidian color palette and translucent glass elements reflecting soft light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuR4KlQ4UNHyZEnLkOI9i2HW9Y_i8K9HY8ZzFjWJc9R0bBPYMh_uKoPY_2l2WZAYvgZYKQw2o2HdKwva-zlgxFbQ4pWeh60nFJogt7X8lp_Pg_D_DlPQ_2E4IytWuOd-swwMDylES7lTxuWRt5eOegqprGcrRRP4zBUhyvfcYf3f8O9vOPckJJkHKAooisY3eOZcnzv-JMeHMNjtIUtTT68_SoPXPZ_7f7Wxf-XbQvQS07nSN-dlXoqzgbk2Df407PVqVJGE9imns"/>
+</div>
+</div>
+</section>
+<!-- ML Explanation -->
+<section class="mb-20" id="ml-models">
+<h2 class="font-headline-md text-headline-md mb-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">model_training</span>
+                    ML Engine Architecture
+                </h2>
+<!-- TF-IDF Callout -->
+<div class="mb-12" id="tf-idf">
+<h3 class="text-xl font-bold mb-4 text-on-surface">Feature Vectorization (TF-IDF)</h3>
+<p class="mb-6 text-on-surface-variant">Sentinel leverages TF-IDF (Term Frequency-Inverse Document Frequency) to convert unstructured system logs into high-dimensional numerical vectors. This allows the engine to distinguish between routine administrative noise and anomalous behavior signatures.</p>
+<div class="p-6 bg-surface-container-low border-l-4 border-secondary rounded-r-xl mb-6">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-secondary">info</span>
+<div>
+<p class="text-sm font-bold text-on-surface mb-1">PRO TIP</p>
+<p class="text-sm text-on-surface-variant">Adjust the `min_df` parameter in your scan config to filter out extremely rare events that may be noise rather than indicators of compromise.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Random Forest -->
+<div class="mb-12" id="random-forest">
+<h3 class="text-xl font-bold mb-4 text-on-surface">Random Forest Classifier</h3>
+<p class="mb-6 text-on-surface-variant">Our core classification engine uses a Random Forest ensemble method. By training thousands of decision trees on historical exploit data, Sentinel achieves a 99.8% precision rate with minimal false positives.</p>
+<div class="code-block p-6 rounded-xl font-mono-label text-sm leading-relaxed overflow-x-auto border border-primary/20">
+<div class="flex gap-2 mb-4 border-b border-white/10 pb-4">
+<div class="w-3 h-3 rounded-full bg-error"></div>
+<div class="w-3 h-3 rounded-full bg-tertiary"></div>
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+</div>
+<pre class="text-on-surface"><span class="text-primary">from</span> sentinel.ml <span class="text-primary">import</span> RandomForestClassifier
+<span class="text-primary">from</span> sentinel.data <span class="text-primary">import</span> load_telemetry
+
+<span class="text-outline"># Initialize the classifier with 1000 trees</span>
+clf = RandomForestClassifier(n_estimators=<span class="text-secondary">1000</span>, depth=<span class="text-secondary">32</span>)
+
+<span class="text-outline"># Train on encrypted payloads</span>
+data = load_telemetry(source=<span class="text-secondary">'internal_network'</span>)
+clf.fit(data.vectors, data.labels)
+
+<span class="text-outline"># Predict threat level</span>
+threat_score = clf.predict_proba(current_packet)
+<span class="text-primary">print</span>(<span class="text-secondary">f"Threat Confidence: {threat_score}%"</span>)</pre>
+</div>
+</div>
+</section>
+<!-- Usage Guide -->
+<section class="mb-20" id="usage-guide">
+<h2 class="font-headline-md text-headline-md mb-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">terminal</span>
+                    Usage Guide
+                </h2>
+<div class="grid md:grid-cols-2 gap-6">
+<div class="glass-card p-6 rounded-xl hover:translate-x-1 transition-transform">
+<h4 class="font-bold mb-2">CLI Installation</h4>
+<p class="text-sm text-on-surface-variant mb-4">Install the global Sentinel binary to your environment.</p>
+<div class="bg-black p-3 rounded font-mono text-xs text-primary">
+                            curl -sSL https://sentinel.sh/install | sh
+                        </div>
+</div>
+<div class="glass-card p-6 rounded-xl hover:translate-x-1 transition-transform">
+<h4 class="font-bold mb-2">Docker Setup</h4>
+<p class="text-sm text-on-surface-variant mb-4">Run the analysis node in a containerized environment.</p>
+<div class="bg-black p-3 rounded font-mono text-xs text-primary">
+                            docker run -d sentinel-node:latest
+                        </div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- Footer -->
+<footer class="w-full bg-surface-container-lowest py-12 px-margin_desktop flex flex-col md:flex-row justify-between items-center gap-gutter border-t border-outline-variant/10 rounded-t-xl">
+<div class="flex flex-col gap-2">
+<div class="font-display-lg text-lg font-bold text-on-surface">Sentinel</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">© 2024 Sentinel Security Platform. All rights reserved.</p>
+</div>
+<div class="flex gap-8">
+<a class="text-on-surface-variant hover:text-primary transition-colors text-body-sm" href="#">Docs</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-body-sm" href="#">Dashboard</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-body-sm" href="#">GitHub</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-body-sm" href="#">Terms</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-body-sm" href="#">Privacy</a>
+</div>
+</footer>
+</body></html>

@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 
 # Lazy load models so server boots instantly
@@ -10,7 +10,7 @@ def get_scanner():
     global scanner, engine_ready
     if scanner is None:
         try:
-            from github_scanner import GitHubScanner
+            from app.github_scanner import GitHubScanner
             print("[*] Init AI Engine in background...")
             scanner = GitHubScanner()
             engine_ready = True
@@ -22,20 +22,22 @@ def get_scanner():
 load_dotenv()
 
 # We set template_folder to target our templates directory
-app = Flask(__name__, template_folder='templates', static_folder='static')
+app = Flask(__name__)
 
 # --- Pages Routing ---
+# NOTE: Frontend templates are being rebuilt by the UI team.
+# Placeholder responses until new templates are delivered.
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return "<h2>VulnScanner AI — Frontend coming soon.</h2>", 200
 
 @app.route('/login')
 def login():
-    return render_template('login.html')
+    return "<h2>Login — Frontend coming soon.</h2>", 200
 
 @app.route('/dashboard')
 def dashboard():
-    return render_template('dashboard.html')
+    return "<h2>Dashboard — Frontend coming soon.</h2>", 200
 
 # --- API Endpoints ---
 @app.route('/api/status', methods=['GET'])
