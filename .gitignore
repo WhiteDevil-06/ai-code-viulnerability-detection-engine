@@ -13,4 +13,7 @@ data/*.csv
 
 # Secrets
 .env
+
+# UI Prototypes
+stitch_sentinel_ai_platform_prototype/
 
