@@ -1,20 +1,26 @@
+.venv/
 env/
 __pycache__/
-*.pyc
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
 
-# Dataset raw samples (generated, not tracked)
+# Local datasets and extracted training data
+CVEfixes_v1.0.7/
 data/raw/
-
-# Trained model binaries (large files)
-models/
-
-# CSV datasets
+data/interim/
+data/processed/
 data/*.csv
+data/*.parquet
+*.db
+*.sqlite
+*.sqlite3
 
-# Secrets
+# Generated model and report outputs
+artifacts/*
+!artifacts/README.md
+reports/*
+!reports/README.md
+
+# Local secrets
 .env
-
-# UI Prototypes
-stitch_sentinel_ai_platform_prototype/
-
-CVEfixes_v1.0.7

@@ -101,7 +101,8 @@ class GitHubScanner:
                             vulnerabilities.append({
                                 "file":          clean_name,
                                 "vulnerability": vuln_type,
-                                "confidence":    confidence
+                                "confidence":    confidence,
+                                "code":          raw_code
                             })
                     except Exception:
                         pass

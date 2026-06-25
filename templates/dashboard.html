@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-
-<html class="dark" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Sentinel Security Dashboard</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Geist:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<style>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Sentinel Security Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Geist:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <style>
         body {
             background-color: #09090B;
             color: #e7e0ed;
@@ -32,7 +31,7 @@
         .syntax-comment { color: #958ea0; }
         .vulnerable-line { background: rgba(147, 0, 10, 0.2); border-left: 3px solid #ffb4ab; }
     </style>
-<script id="tailwind-config">
+    <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -144,7 +143,7 @@
             </button>
 <div class="flex items-center gap-3 pt-6 border-t border-white/10">
 <div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden border border-outline-variant">
-<img alt="Developer Profile" data-alt="A professional headshot of a software security engineer in a high-tech office setting. The lighting is dramatic and cool-toned, reflecting a sophisticated command center environment. The background shows blurred server racks and digital monitors. The overall mood is focused and technically intelligent." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlztR1ARra1H-tB4UetaGvxRFLyUg-CDcR8UCpuZ8hFkEuVaV3R2xNFXIZO2Vu4qbZUsqhF-s0LSYnRnsygM4Ib9oiwu7AfD7DBqmR5JyiXzEyuDNEKc5NTKtiNVh33F3CqSJJhiiX4WqT34185TiRqmiVJgdkuHUiuO_5qwb0MD7YO0VMCmOnJXaw0mq08riMy-KC0tsYxDPfEWCb8e2jQ_PsYW-dmTNIZAsn0dnMdkLMvAu9J7U4nGJ16zHe6BXZ-HQcvZ9EGKA"/>
+<img alt="Developer Profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlztR1ARra1H-tB4UetaGvxRFLyUg-CDcR8UCpuZ8hFkEuVaV3R2xNFXIZO2Vu4qbZUsqhF-s0LSYnRnsygM4Ib9oiwu7AfD7DBqmR5JyiXzEyuDNEKc5NTKtiNVh33F3CqSJJhiiX4WqT34185TiRqmiVJgdkuHUiuO_5qwb0MD7YO0VMCmOnJXaw0mq08riMy-KC0tsYxDPfEWCb8e2jQ_PsYW-dmTNIZAsn0dnMdkLMvAu9J7U4nGJ16zHe6BXZ-HQcvZ9EGKA"/>
 </div>
 <div class="flex-1 min-w-0">
 <p class="text-sm font-semibold truncate">Alex Chen</p>
@@ -156,6 +155,7 @@
 </div>
 </div>
 </aside>
+
 <!-- Main Content Area -->
 <main class="ml-72 mr-margin_desktop pt-24 pb-margin_desktop min-h-screen">
 <!-- TopAppBar -->
@@ -174,83 +174,86 @@
 </div>
 <div class="flex items-center gap-3">
 <button class="px-4 py-2 text-on-surface-variant hover:bg-surface-variant/30 rounded-full transition-all text-body-sm font-medium">API Access</button>
-<button class="px-6 py-2 bg-primary text-on-primary font-bold rounded-full scale-95 active:scale-90 transition-transform">Start Scan</button>
+<a href="/dashboard" class="px-6 py-2 bg-primary text-on-primary font-bold rounded-full scale-95 active:scale-90 transition-transform text-center inline-block">Start Scan</a>
 <div class="h-6 w-[1px] bg-outline-variant/30 mx-2"></div>
 <button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant/30 rounded-full" data-icon="notifications">notifications</button>
 <button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant/30 rounded-full" data-icon="account_circle">account_circle</button>
 </div>
 </header>
+
 <!-- Workspace Layout -->
 <div class="grid grid-cols-12 gap-gutter">
 <!-- Scan Input Area -->
 <section class="col-span-12 obsidian-card p-gutter rounded-xl">
-<div class="flex flex-col md:flex-row gap-4 items-end">
-<div class="flex-1 space-y-2">
-<label class="text-mono-label text-outline uppercase">Repository Analysis</label>
-<div class="relative">
-<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline" data-icon="link">link</span>
-<input id="repo-url-input" class="w-full bg-black/40 border border-outline-variant/30 rounded-lg py-3 pl-12 pr-4 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" placeholder="https://github.com/organization/secure-api-gateway" type="text"/>
-</div>
-</div>
-<button id="run-analysis-btn" class="bg-primary-container text-on-primary-container px-8 py-3 rounded-lg font-bold flex items-center gap-2 hover:brightness-110 transition-all">
-<span class="material-symbols-outlined" data-icon="bolt" data-weight="fill">bolt</span>
-                        Run Analysis
-                    </button>
-</div>
+    <div class="flex border-b border-white/10 mb-4 gap-6">
+        <button id="tab-repo-btn" class="pb-2 border-b-2 border-primary text-primary font-semibold text-sm transition-all focus:outline-none">Repository Scan</button>
+        <button id="tab-code-btn" class="pb-2 text-on-surface-variant hover:text-on-surface font-semibold text-sm transition-all focus:outline-none">Code Snippet Scan</button>
+    </div>
+    
+    <!-- Repository Scan Tab Content -->
+    <div id="tab-repo-content" class="flex flex-col md:flex-row gap-4 items-end">
+        <div class="flex-1 space-y-2 w-full">
+            <label class="text-mono-label text-outline uppercase text-[10px] tracking-wider">GitHub Repository URL</label>
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline" data-icon="link">link</span>
+                <input id="repo-url-input" class="w-full bg-black/40 border border-outline-variant/30 rounded-lg py-3 pl-12 pr-4 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" placeholder="https://github.com/organization/secure-api-gateway" type="text"/>
+            </div>
+        </div>
+        <button id="run-analysis-btn" class="bg-primary-container text-on-primary-container px-8 py-3 rounded-lg font-bold flex items-center gap-2 hover:brightness-110 transition-all whitespace-nowrap">
+            <span class="material-symbols-outlined" data-icon="bolt" data-weight="fill">bolt</span>
+            Run Analysis
+        </button>
+    </div>
+
+    <!-- Code Snippet Scan Tab Content -->
+    <div id="tab-code-content" class="hidden flex-col gap-4">
+        <div class="space-y-2 w-full">
+            <label class="text-mono-label text-outline uppercase text-[10px] tracking-wider">Paste Python Code Snippet</label>
+            <textarea id="code-snippet-input" rows="6" class="w-full bg-black/40 border border-outline-variant/30 rounded-lg p-4 font-mono text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" placeholder="def process_input(username, password):&#10;    # Write or paste your Python code here..."></textarea>
+        </div>
+        <button id="run-code-btn" class="self-end bg-primary text-on-primary px-8 py-3 rounded-lg font-bold flex items-center gap-2 hover:brightness-110 transition-all">
+            <span class="material-symbols-outlined" data-icon="search">search</span>
+            Scan Snippet
+        </button>
+    </div>
 </section>
+
 <!-- Code Analysis Panel (Left) -->
 <div class="col-span-12 lg:col-span-8 space-y-gutter">
 <section class="obsidian-card rounded-xl overflow-hidden">
 <div class="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/5">
 <div class="flex items-center gap-3">
 <span class="material-symbols-outlined text-primary" data-icon="code">code</span>
-<h3 class="font-headline-md text-base font-semibold">src/auth/jwt_validator.js</h3>
+<h3 id="code-viewer-filename" class="font-headline-md text-base font-semibold">No File Selected</h3>
 </div>
 <div class="flex gap-2">
-<span class="px-2 py-1 bg-error-container/20 text-error text-[10px] font-mono border border-error/20 rounded">Critical Vulnerability</span>
+<span id="code-viewer-severity" class="hidden px-2 py-1 bg-error-container/20 text-error text-[10px] font-mono border border-error/20 rounded">Vulnerability Detected</span>
 </div>
 </div>
-<div class="bg-[#050505] p-6 font-mono-label text-body-sm leading-relaxed overflow-x-auto min-h-[400px]">
-<div class="flex gap-6">
-<div class="text-outline/40 text-right select-none space-y-1">
-<div>102</div><div>103</div><div>104</div><div>105</div><div>106</div><div>107</div><div>108</div><div>109</div><div>110</div><div>111</div>
+<div id="code-viewer-container" class="bg-[#050505] p-6 font-mono-label text-body-sm leading-relaxed overflow-x-auto min-h-[400px] flex items-center justify-center text-outline/40 font-mono text-[13px]">
+    Select a scanned file to view its source code and remediation guidelines.
 </div>
-<div class="flex-1 space-y-1">
-<div><span class="syntax-keyword">const</span> jwt = <span class="syntax-keyword">require</span>(<span class="syntax-string">'jsonwebtoken'</span>);</div>
-<div><span class="syntax-keyword">const</span> SECRET = process.env.SECRET_KEY;</div>
-<div class="syntax-comment">// Validate user session token</div>
-<div><span class="syntax-keyword">function</span> <span class="text-secondary">verifyToken</span>(token) {</div>
-<div class="vulnerable-line px-2 -mx-2 rounded">
-<span class="syntax-keyword">return</span> jwt.verify(token, SECRET, { algorithms: [<span class="syntax-string">'HS256'</span>, <span class="syntax-string">'none'</span>] });
-                                </div>
-<div>}</div>
-<div class="syntax-comment">// Log access for auditing</div>
-<div><span class="syntax-keyword">const</span> logger = <span class="syntax-keyword">require</span>(<span class="syntax-string">'./logger'</span>);</div>
-<div>logger.info(<span class="syntax-string">'Token verification initiated'</span>);</div>
-</div>
-</div>
-</div>
-<div class="p-6 bg-surface-container-high/50 border-t border-white/5">
+<div id="code-viewer-remediation-panel" class="hidden p-6 bg-surface-container-high/50 border-t border-white/5">
 <div class="flex gap-4 items-start">
 <div class="p-2 bg-error-container/20 rounded-lg">
 <span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
 </div>
 <div class="space-y-2">
-<h4 class="font-bold text-on-surface">Broken Authentication: Algorithm Confusion</h4>
-<p class="text-on-surface-variant text-body-sm">The implementation allows the <code class="bg-black/40 px-1 rounded">none</code> algorithm which permits attackers to bypass signature verification by crafting an unsigned token.</p>
+<h4 id="remediation-title" class="font-bold text-on-surface">Vulnerability Detected</h4>
+<p id="remediation-description" class="text-on-surface-variant text-body-sm"></p>
 <div class="pt-2">
 <h5 class="text-mono-label text-primary uppercase text-[10px] tracking-widest mb-1">Recommendation</h5>
-<p class="text-body-sm border-l-2 border-primary pl-4 py-1 italic opacity-90">Explicitly whitelist only strong algorithms: <code class="text-secondary">algorithms: ['HS256']</code></p>
+<p id="remediation-recommendation" class="text-body-sm border-l-2 border-primary pl-4 py-1 italic opacity-90"></p>
 </div>
 </div>
 </div>
 </div>
 </section>
+
 <!-- Incident Table -->
 <section class="obsidian-card rounded-xl p-gutter">
 <div class="flex items-center justify-between mb-6">
 <h3 class="font-headline-md text-base font-bold">Detected Vulnerabilities</h3>
-<button class="text-primary text-body-sm hover:underline">Export Full CSV</button>
 </div>
 <div class="overflow-x-auto">
 <table class="w-full text-left border-collapse">
@@ -262,57 +265,18 @@
 <th class="pb-4 font-medium text-right">Status</th>
 </tr>
 </thead>
-<tbody id="vuln-table-body" class="text-body-sm">
-<tr class="border-b border-white/5 hover:bg-white/5 transition-colors group">
-<td class="py-4 font-semibold text-error">SQL Injection</td>
-<td class="py-4 text-on-surface-variant">/api/v1/user_profile.js:42</td>
-<td class="py-4">
-<div class="flex items-center gap-2">
-<div class="w-16 h-1 bg-white/10 rounded-full overflow-hidden">
-<div class="h-full bg-primary w-[98%]"></div>
-</div>
-<span class="text-[11px]">98.2%</span>
-</div>
-</td>
-<td class="py-4 text-right">
-<span class="px-3 py-1 bg-surface-variant/50 text-on-surface-variant rounded-full text-[10px]">Open</span>
-</td>
-</tr>
-<tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
-<td class="py-4 font-semibold text-tertiary">XSS (Stored)</td>
-<td class="py-4 text-on-surface-variant">/views/comments.html:12</td>
-<td class="py-4">
-<div class="flex items-center gap-2">
-<div class="w-16 h-1 bg-white/10 rounded-full overflow-hidden">
-<div class="h-full bg-primary w-[84%]"></div>
-</div>
-<span class="text-[11px]">84.0%</span>
-</div>
-</td>
-<td class="py-4 text-right">
-<span class="px-3 py-1 bg-primary/20 text-primary rounded-full text-[10px]">Fixing</span>
-</td>
-</tr>
-<tr class="hover:bg-white/5 transition-colors">
-<td class="py-4 font-semibold text-secondary">Insecure CORS</td>
-<td class="py-4 text-on-surface-variant">config/cors_policy.rb:8</td>
-<td class="py-4">
-<div class="flex items-center gap-2">
-<div class="w-16 h-1 bg-white/10 rounded-full overflow-hidden">
-<div class="h-full bg-primary w-[72%]"></div>
-</div>
-<span class="text-[11px]">72.5%</span>
-</div>
-</td>
-<td class="py-4 text-right">
-<span class="px-3 py-1 bg-surface-variant/50 text-on-surface-variant rounded-full text-[10px]">Muted</span>
-</td>
-</tr>
+<tbody id="vuln-table-body" class="text-body-sm cursor-pointer">
+    <tr>
+        <td colspan="4" class="py-12 text-center text-on-surface-variant font-mono-label">
+            No active analysis. Enter a repo URL or paste a code snippet above.
+        </td>
+    </tr>
 </tbody>
 </table>
 </div>
 </section>
 </div>
+
 <!-- Sidebar (Right) -->
 <div class="col-span-12 lg:col-span-4 space-y-gutter">
 <!-- Status Card -->
@@ -322,83 +286,65 @@
 <div class="relative w-16 h-16 flex items-center justify-center">
 <svg class="w-full h-full transform -rotate-90">
 <circle class="text-white/10" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="4"></circle>
-<circle class="text-primary transition-all duration-1000" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="175" stroke-dashoffset="45" stroke-width="4"></circle>
+<circle id="stat-progress-ring" class="text-primary transition-all duration-1000" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="175" stroke-dashoffset="175" stroke-width="4"></circle>
 </svg>
-<span class="absolute text-xs font-bold">74%</span>
+<span id="stat-progress-pct" class="absolute text-xs font-bold">0%</span>
 </div>
 <div>
-<h3 class="font-bold text-on-surface">Analysis Active</h3>
-<p class="text-body-sm text-on-surface-variant">Phase: Pattern Matching</p>
+<h3 id="stat-analysis-title" class="font-bold text-on-surface">System Idle</h3>
+<p id="stat-analysis-subtitle" class="text-body-sm text-on-surface-variant">Ready for analysis</p>
 </div>
 </div>
 <div class="space-y-4">
 <div class="flex justify-between items-center text-body-sm">
 <span class="text-on-surface-variant">Files Scanned</span>
-<span class="font-mono text-secondary">1,242 / 1,650</span>
+<span id="stat-files-scanned" class="font-mono text-secondary">0</span>
 </div>
 <div class="flex justify-between items-center text-body-sm">
 <span class="text-on-surface-variant">Engine Speed</span>
-<span class="font-mono text-secondary">485 files/sec</span>
+<span id="stat-engine-speed" class="font-mono text-secondary">N/A</span>
 </div>
 <div class="flex justify-between items-center text-body-sm">
 <span class="text-on-surface-variant">Elapsed Time</span>
-<span class="font-mono text-secondary">00:42.12</span>
+<span id="stat-elapsed-time" class="font-mono text-secondary">0.00s</span>
 </div>
 </div>
 </section>
+
 <!-- Analytics Summary -->
 <section class="obsidian-card p-6 rounded-xl">
 <h4 class="text-mono-label text-outline uppercase mb-4">Risk Distribution</h4>
 <div class="flex items-end gap-2 h-32 mb-6">
-<div class="flex-1 bg-error/20 border-t-2 border-error h-[90%] rounded-t-sm"></div>
-<div class="flex-1 bg-tertiary/20 border-t-2 border-tertiary h-[60%] rounded-t-sm"></div>
-<div class="flex-1 bg-secondary/20 border-t-2 border-secondary h-[40%] rounded-t-sm"></div>
-<div class="flex-1 bg-primary/20 border-t-2 border-primary h-[25%] rounded-t-sm"></div>
-<div class="flex-1 bg-outline/20 border-t-2 border-outline h-[15%] rounded-t-sm"></div>
+<div id="bar-sql" class="flex-1 bg-error/25 border-t-2 border-error h-0 rounded-t-sm transition-all duration-500" title="SQL Injection"></div>
+<div id="bar-cmd" class="flex-1 bg-tertiary/25 border-t-2 border-tertiary h-0 rounded-t-sm transition-all duration-500" title="Command Injection"></div>
+<div id="bar-eval" class="flex-1 bg-secondary/25 border-t-2 border-secondary h-0 rounded-t-sm transition-all duration-500" title="Unsafe Eval"></div>
+<div id="bar-xss" class="flex-1 bg-primary/25 border-t-2 border-primary h-0 rounded-t-sm transition-all duration-500" title="Cross-Site Scripting (XSS)"></div>
+<div id="bar-general" class="flex-1 bg-outline/25 border-t-2 border-outline h-0 rounded-t-sm transition-all duration-500" title="General Vuln"></div>
 </div>
 <div class="grid grid-cols-2 gap-4">
 <div class="p-4 bg-surface-container rounded-lg border border-white/5">
-<p class="text-[10px] text-outline uppercase">Critical</p>
-<p class="text-2xl font-bold text-error">12</p>
+<p class="text-[10px] text-outline uppercase">Critical Flaws</p>
+<p id="stat-critical-count" class="text-2xl font-bold text-error">0</p>
 </div>
 <div class="p-4 bg-surface-container rounded-lg border border-white/5">
-<p class="text-[10px] text-outline uppercase">High</p>
-<p class="text-2xl font-bold text-tertiary">28</p>
+<p class="text-[10px] text-outline uppercase">Flagged Files</p>
+<p id="stat-high-count" class="text-2xl font-bold text-tertiary">0</p>
 </div>
 </div>
 </section>
-<!-- Recent Alerts -->
+
+<!-- Recent Alerts Feed -->
 <section class="space-y-3">
 <h4 class="text-mono-label text-outline uppercase px-2">Vulnerability Feed</h4>
-<div class="obsidian-card p-4 rounded-xl flex gap-4 items-start hover:bg-white/5 transition-colors cursor-pointer border-l-4 border-error">
-<div class="p-2 bg-error/10 rounded">
-<span class="material-symbols-outlined text-error text-sm" data-icon="policy">policy</span>
-</div>
-<div>
-<p class="text-body-sm font-semibold">Hardcoded Secrets</p>
-<p class="text-[11px] text-on-surface-variant">config/database.yml • 2 mins ago</p>
-<div class="mt-2 flex items-center gap-1">
-<span class="px-1.5 py-0.5 bg-black/40 text-[9px] font-mono rounded">Confidence: 99%</span>
-</div>
-</div>
-</div>
-<div class="obsidian-card p-4 rounded-xl flex gap-4 items-start hover:bg-white/5 transition-colors cursor-pointer border-l-4 border-tertiary">
-<div class="p-2 bg-tertiary/10 rounded">
-<span class="material-symbols-outlined text-tertiary text-sm" data-icon="security">security</span>
-</div>
-<div>
-<p class="text-body-sm font-semibold">Weak Encryption</p>
-<p class="text-[11px] text-on-surface-variant">lib/crypt.py • 15 mins ago</p>
-<div class="mt-2 flex items-center gap-1">
-<span class="px-1.5 py-0.5 bg-black/40 text-[9px] font-mono rounded">Confidence: 82%</span>
-</div>
-</div>
+<div id="vulnerability-feed" class="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+    <div class="text-[11px] text-outline/40 text-center py-6 font-mono-label">No alerts feed. Run scan to populate feed.</div>
 </div>
 </section>
 </div>
 </div>
 </main>
-<!-- Footer (Embedded in Main Canvas) -->
+
+<!-- Footer -->
 <footer class="ml-72 mr-margin_desktop border-t border-outline-variant/10 py-12 px-margin_desktop flex flex-col md:flex-row justify-between items-center gap-gutter text-body-sm text-on-surface-variant">
 <div class="flex items-center gap-2">
 <span class="font-display-lg text-lg font-bold text-on-surface">Sentinel</span>
@@ -413,9 +359,12 @@
 <a class="hover:text-primary transition-colors" href="#">Privacy</a>
 </div>
 </footer>
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Check System Health
+    let activeVulnerabilities = [];
+
+    // 1. Check Engine Online Status
     fetch('/api/status')
         .then(res => res.json())
         .then(data => {
@@ -427,18 +376,287 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .catch(err => console.error("Error fetching status:", err));
 
-    // 2. Repository Scan
+    // 2. Tab Navigation
+    const tabRepoBtn = document.getElementById('tab-repo-btn');
+    const tabCodeBtn = document.getElementById('tab-code-btn');
+    const tabRepoContent = document.getElementById('tab-repo-content');
+    const tabCodeContent = document.getElementById('tab-code-content');
+
+    tabRepoBtn.addEventListener('click', () => {
+        tabRepoBtn.className = "pb-2 border-b-2 border-primary text-primary font-semibold text-sm transition-all focus:outline-none";
+        tabCodeBtn.className = "pb-2 text-on-surface-variant hover:text-on-surface font-semibold text-sm transition-all focus:outline-none";
+        tabRepoContent.classList.remove('hidden');
+        tabRepoContent.classList.add('flex');
+        tabCodeContent.classList.add('hidden');
+        tabCodeContent.classList.remove('flex');
+    });
+
+    tabCodeBtn.addEventListener('click', () => {
+        tabCodeBtn.className = "pb-2 border-b-2 border-primary text-primary font-semibold text-sm transition-all focus:outline-none";
+        tabRepoBtn.className = "pb-2 text-on-surface-variant hover:text-on-surface font-semibold text-sm transition-all focus:outline-none";
+        tabCodeContent.classList.remove('hidden');
+        tabCodeContent.classList.add('flex');
+        tabRepoContent.classList.add('hidden');
+        tabRepoContent.classList.remove('flex');
+    });
+
+    // 3. Render Code with Syntax Highlight and Line Highlights
+    function escapeHtml(text) {
+        return text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function checkIsVulnerableLine(line, vulnType) {
+        const l = line.toLowerCase();
+        if (vulnType === "SQL Injection") {
+            return l.includes(".execute(") && (l.includes("f'") || l.includes('f"') || l.includes("%") || l.includes(".format("));
+        }
+        if (vulnType === "Command Injection") {
+            return l.includes("os.system") || l.includes("os.popen") || l.includes("subprocess.run") || l.includes("subprocess.popen") || l.includes("subprocess.call");
+        }
+        if (vulnType === "Unsafe eval() usage") {
+            return l.includes("eval(") || l.includes("exec(");
+        }
+        if (vulnType === "Cross-Site Scripting (XSS)") {
+            return l.includes("render_template_string") || l.includes("markup(");
+        }
+        return false;
+    }
+
+    function displayCode(filename, codeText, vulnType) {
+        const container = document.getElementById('code-viewer-container');
+        container.className = "bg-[#050505] p-6 font-mono-label text-body-sm leading-relaxed overflow-x-auto min-h-[400px]";
+        container.innerHTML = "";
+
+        const lines = codeText.split('\n');
+        
+        const lineNumbersCol = document.createElement('div');
+        lineNumbersCol.className = "text-outline/45 text-right select-none space-y-1 pr-4 border-r border-white/10 font-mono text-[13px]";
+        
+        const codeCol = document.createElement('div');
+        codeCol.className = "flex-1 space-y-1 pl-4 font-mono text-[13px] overflow-x-auto";
+
+        lines.forEach((line, index) => {
+            const numDiv = document.createElement('div');
+            numDiv.textContent = index + 1;
+            lineNumbersCol.appendChild(numDiv);
+
+            const lineDiv = document.createElement('div');
+            lineDiv.className = "whitespace-pre";
+            
+            let safeLine = escapeHtml(line);
+            // Color keywords
+            safeLine = safeLine.replace(/\b(def|class|return|import|from|if|else|elif|try|except|as|for|while|in|and|or|not)\b/g, '<span class="syntax-keyword">$1</span>');
+            // Color comments
+            safeLine = safeLine.replace(/(#.*)/g, '<span class="syntax-comment">$1</span>');
+
+            lineDiv.innerHTML = safeLine;
+
+            const isVulnLine = checkIsVulnerableLine(line, vulnType);
+            if (isVulnLine) {
+                lineDiv.className += " vulnerable-line px-2 -mx-2 rounded";
+            }
+
+            codeCol.appendChild(lineDiv);
+        });
+
+        const flexWrapper = document.createElement('div');
+        flexWrapper.className = "flex gap-2";
+        flexWrapper.appendChild(lineNumbersCol);
+        flexWrapper.appendChild(codeCol);
+        container.appendChild(flexWrapper);
+
+        // Update Header
+        document.getElementById('code-viewer-filename').textContent = filename;
+        const severitySpan = document.getElementById('code-viewer-severity');
+        severitySpan.classList.remove('hidden');
+        
+        if (vulnType === "Safe Code") {
+            severitySpan.textContent = "Safe Code";
+            severitySpan.className = "px-2 py-1 bg-secondary/20 text-secondary text-[10px] font-mono border border-secondary/20 rounded";
+            document.getElementById('code-viewer-remediation-panel').classList.add('hidden');
+        } else {
+            severitySpan.textContent = "Critical Risk";
+            severitySpan.className = "px-2 py-1 bg-error-container/20 text-error text-[10px] font-mono border border-error/20 rounded";
+            
+            // Populate Remediation Guidelines
+            const remPanel = document.getElementById('code-viewer-remediation-panel');
+            remPanel.classList.remove('hidden');
+            
+            document.getElementById('remediation-title').textContent = vulnType;
+            let desc = "";
+            let rec = "";
+            
+            if (vulnType === "SQL Injection") {
+                desc = "A raw SQL query was formatted using user-controlled string formatting or interpolation. This allows attackers to manipulate query syntax and execute database statements.";
+                rec = "Use parameterized SQL queries (e.g. cursor.execute('SELECT * FROM users WHERE name=%s', (name,))) instead of raw f-strings or string concatenation.";
+            } else if (vulnType === "Command Injection") {
+                desc = "A shell command executes raw input via os.system or subprocess with shell=True. This allows attackers to run arbitrary system shell commands.";
+                rec = "Avoid running commands through a shell. Use the subprocess module with argument arrays (e.g., subprocess.run(['ping', '-c', '1', host], shell=False)) or validate inputs strictly.";
+            } else if (vulnType === "Unsafe eval() usage") {
+                desc = "The eval() or exec() function executes arbitrary strings of code, creating a severe remote code execution vulnerability.";
+                rec = "Never pass untrusted user input to eval(). Use safe serializers, JSON, or use ast.literal_eval() for safe datastructure evaluation.";
+            } else if (vulnType === "Cross-Site Scripting (XSS)") {
+                desc = "Untrusted input is compiled directly into template outputs without escaping. Attackers can inject malicious Javascript executing in other users' browsers.";
+                rec = "Escape all values before rendering in HTML. Use templates (like Jinja2) that escape outputs automatically, or sanitize variables with markupsafe.escape().";
+            } else {
+                desc = "An AI classification model flagged this method as vulnerable. Code contains exploitation patterns or lacks secure input validations.";
+                rec = "Examine input sources. Restrict parameters using validation schemas, sanitize external parameters, and check function invocation security.";
+            }
+            
+            document.getElementById('remediation-description').textContent = desc;
+            document.getElementById('remediation-recommendation').textContent = rec;
+        }
+    }
+
+    // 4. Update Stats Dashboard and Risk Chart
+    function updateStatsDashboard(vulnerabilities, filesCount, timeElapsed) {
+        // Files Scanned
+        document.getElementById('stat-files-scanned').textContent = filesCount;
+        
+        // Time and Speed
+        document.getElementById('stat-elapsed-time').textContent = timeElapsed.toFixed(2) + "s";
+        const speed = filesCount > 0 && timeElapsed > 0 ? Math.round(filesCount / timeElapsed) : "N/A";
+        document.getElementById('stat-engine-speed').textContent = speed !== "N/A" ? `${speed} files/sec` : "N/A";
+        
+        // Progress Ring
+        const ring = document.getElementById('stat-progress-ring');
+        ring.setAttribute('stroke-dashoffset', '0'); // Complete ring
+        document.getElementById('stat-progress-pct').textContent = "100%";
+        document.getElementById('stat-analysis-title').textContent = "Analysis Complete";
+        document.getElementById('stat-analysis-subtitle').textContent = "Scan metrics verified";
+
+        // Count categories
+        let sqlCount = 0;
+        let cmdCount = 0;
+        let evalCount = 0;
+        let xssCount = 0;
+        let generalCount = 0;
+        let totalVulns = 0;
+
+        vulnerabilities.forEach(v => {
+            if (v.vulnerability === "Safe Code") return;
+            totalVulns++;
+            if (v.vulnerability === "SQL Injection") sqlCount++;
+            else if (v.vulnerability === "Command Injection") cmdCount++;
+            else if (v.vulnerability === "Unsafe eval() usage") evalCount++;
+            else if (v.vulnerability === "Cross-Site Scripting (XSS)") xssCount++;
+            else generalCount++;
+        });
+
+        // Set counts
+        document.getElementById('stat-critical-count').textContent = totalVulns;
+        document.getElementById('stat-high-count').textContent = filesCount;
+
+        // Set bar heights (Risk distribution)
+        const getMax = Math.max(sqlCount, cmdCount, evalCount, xssCount, generalCount, 1);
+        document.getElementById('bar-sql').style.height = `${(sqlCount / getMax) * 100}%`;
+        document.getElementById('bar-cmd').style.height = `${(cmdCount / getMax) * 100}%`;
+        document.getElementById('bar-eval').style.height = `${(evalCount / getMax) * 100}%`;
+        document.getElementById('bar-xss').style.height = `${(xssCount / getMax) * 100}%`;
+        document.getElementById('bar-general').style.height = `${(generalCount / getMax) * 100}%`;
+        
+        document.getElementById('bar-sql').setAttribute('title', `SQL Injection: ${sqlCount}`);
+        document.getElementById('bar-cmd').setAttribute('title', `Command Injection: ${cmdCount}`);
+        document.getElementById('bar-eval').setAttribute('title', `Unsafe Eval: ${evalCount}`);
+        document.getElementById('bar-xss').setAttribute('title', `XSS: ${xssCount}`);
+        document.getElementById('bar-general').setAttribute('title', `General: ${generalCount}`);
+
+        // Update Recent Alerts Feed
+        const feed = document.getElementById('vulnerability-feed');
+        feed.innerHTML = '';
+        const realVulns = vulnerabilities.filter(v => v.vulnerability !== "Safe Code");
+        
+        if (realVulns.length === 0) {
+            feed.innerHTML = '<div class="text-[11px] text-outline/40 text-center py-6 font-mono-label">No vulnerabilities flagged.</div>';
+        } else {
+            realVulns.slice(0, 10).forEach(v => {
+                const icon = v.vulnerability === "SQL Injection" ? "database" : "policy";
+                const borderClass = v.vulnerability === "SQL Injection" ? "border-l-4 border-error" : "border-l-4 border-tertiary";
+                const badgeColor = v.vulnerability === "SQL Injection" ? "bg-error/15 text-error" : "bg-tertiary/15 text-tertiary";
+                
+                const item = document.createElement('div');
+                item.className = `obsidian-card p-4 rounded-xl flex gap-4 items-start hover:bg-white/5 transition-colors cursor-pointer ${borderClass}`;
+                item.innerHTML = `
+                    <div class="p-2 ${badgeColor} rounded">
+                        <span class="material-symbols-outlined text-sm">${icon}</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-body-sm font-semibold truncate">${v.vulnerability}</p>
+                        <p class="text-[11px] text-on-surface-variant truncate">${v.file}</p>
+                        <div class="mt-1 flex items-center gap-2">
+                            <span class="px-1.5 py-0.5 bg-black/40 text-[9px] font-mono rounded">Conf: ${(v.confidence * 100).toFixed(1)}%</span>
+                        </div>
+                    </div>
+                `;
+                item.addEventListener('click', () => {
+                    displayCode(v.file, v.code, v.vulnerability);
+                });
+                feed.appendChild(item);
+            });
+        }
+    }
+
+    // 5. Render Vulnerabilities Table
+    const tableBody = document.getElementById('vuln-table-body');
+    
+    function renderVulnerabilitiesTable(vulnerabilities) {
+        tableBody.innerHTML = '';
+        
+        if (!vulnerabilities || vulnerabilities.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="4" class="py-12 text-center text-on-surface-variant font-mono-label">No vulnerabilities detected. Source code is clean.</td></tr>';
+            return;
+        }
+
+        vulnerabilities.forEach((vuln, index) => {
+            const colorClass = vuln.vulnerability === 'Safe Code' ? 'text-secondary' : 'text-error';
+            const confPercent = (vuln.confidence * 100).toFixed(1);
+            const tr = document.createElement('tr');
+            tr.className = 'border-b border-white/5 hover:bg-white/5 transition-colors group';
+            tr.innerHTML = `
+                <td class="py-4 font-semibold ${colorClass}">${vuln.vulnerability}</td>
+                <td class="py-4 text-on-surface-variant font-mono">${vuln.file}</td>
+                <td class="py-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-16 h-1 bg-white/10 rounded-full overflow-hidden">
+                            <div class="h-full bg-primary" style="width: ${confPercent}%"></div>
+                        </div>
+                        <span class="text-[11px] font-mono">${confPercent}%</span>
+                    </div>
+                </td>
+                <td class="py-4 text-right">
+                    <span class="px-3 py-1 bg-surface-variant/50 text-on-surface-variant rounded-full text-[10px]">Open</span>
+                </td>
+            `;
+            
+            tr.addEventListener('click', () => {
+                displayCode(vuln.file, vuln.code, vuln.vulnerability);
+            });
+            
+            tableBody.appendChild(tr);
+        });
+    }
+
+    // 6. Action 1: Repository URL Scanner
     const runBtn = document.getElementById('run-analysis-btn');
     const repoInput = document.getElementById('repo-url-input');
-    const tableBody = document.getElementById('vuln-table-body');
 
     runBtn.addEventListener('click', () => {
         const url = repoInput.value.trim();
         if (!url) return alert("Please enter a repository URL.");
         
         runBtn.disabled = true;
-        runBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Scanning...';
-
+        runBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">sync</span> Scanning...';
+        
+        document.getElementById('stat-analysis-title').textContent = "Scanning Repo";
+        document.getElementById('stat-analysis-subtitle').textContent = "Downloading source payload...";
+        
+        const start = performance.now();
+        
         fetch('/api/scan/repo', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -451,46 +669,96 @@ document.addEventListener("DOMContentLoaded", () => {
             
             if (data.error) {
                 alert("Error: " + data.error);
+                document.getElementById('stat-analysis-title').textContent = "Scan Failed";
                 return;
             }
 
-            tableBody.innerHTML = '';
+            const elapsedSeconds = (performance.now() - start) / 1000;
+            activeVulnerabilities = data.vulnerabilities || [];
             
-            if (!data.vulnerabilities || data.vulnerabilities.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-on-surface-variant">No vulnerabilities found.</td></tr>';
-                return;
+            renderVulnerabilitiesTable(activeVulnerabilities);
+            updateStatsDashboard(activeVulnerabilities, data.files_scanned, elapsedSeconds);
+            
+            if (activeVulnerabilities.length > 0) {
+                displayCode(activeVulnerabilities[0].file, activeVulnerabilities[0].code, activeVulnerabilities[0].vulnerability);
+            } else {
+                document.getElementById('code-viewer-container').innerHTML = "Select a scanned file to view its source code.";
+                document.getElementById('code-viewer-filename').textContent = "No File Selected";
+                document.getElementById('code-viewer-severity').classList.add('hidden');
+                document.getElementById('code-viewer-remediation-panel').classList.add('hidden');
             }
-
-            data.vulnerabilities.forEach(vuln => {
-                const colorClass = vuln.vulnerability === 'Safe Code' ? 'text-secondary' : 'text-error';
-                const confPercent = (vuln.confidence * 100).toFixed(1);
-                const tr = document.createElement('tr');
-                tr.className = 'border-b border-white/5 hover:bg-white/5 transition-colors group';
-                tr.innerHTML = `
-                    <td class="py-4 font-semibold ${colorClass}">${vuln.vulnerability}</td>
-                    <td class="py-4 text-on-surface-variant">${vuln.file}</td>
-                    <td class="py-4">
-                        <div class="flex items-center gap-2">
-                            <div class="w-16 h-1 bg-white/10 rounded-full overflow-hidden">
-                                <div class="h-full bg-primary" style="width: ${confPercent}%"></div>
-                            </div>
-                            <span class="text-[11px]">${confPercent}%</span>
-                        </div>
-                    </td>
-                    <td class="py-4 text-right">
-                        <span class="px-3 py-1 bg-surface-variant/50 text-on-surface-variant rounded-full text-[10px]">Open</span>
-                    </td>
-                `;
-                tableBody.appendChild(tr);
-            });
         })
         .catch(err => {
             runBtn.disabled = false;
             runBtn.innerHTML = '<span class="material-symbols-outlined" data-icon="bolt" data-weight="fill">bolt</span> Run Analysis';
             console.error("Scan error:", err);
-            alert("An error occurred during scanning.");
+            alert("An error occurred during repository scanning.");
+        });
+    });
+
+    // 7. Action 2: Code Snippet Scanner
+    const runCodeBtn = document.getElementById('run-code-btn');
+    const codeSnippetInput = document.getElementById('code-snippet-input');
+
+    runCodeBtn.addEventListener('click', () => {
+        const codeText = codeSnippetInput.value.trim();
+        if (!codeText) return alert("Please paste a Python code snippet to scan.");
+
+        runCodeBtn.disabled = true;
+        runCodeBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">sync</span> Scanning...';
+
+        document.getElementById('stat-analysis-title').textContent = "Scanning Snippet";
+        document.getElementById('stat-analysis-subtitle').textContent = "Analyzing input tokens...";
+        
+        const start = performance.now();
+
+        fetch('/api/scan/code', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: codeText })
+        })
+        .then(res => res.json())
+        .then(data => {
+            runCodeBtn.disabled = false;
+            runCodeBtn.innerHTML = '<span class="material-symbols-outlined">search</span> Scan Snippet';
+
+            if (data.error) {
+                alert("Error: " + data.error);
+                document.getElementById('stat-analysis-title').textContent = "Scan Failed";
+                return;
+            }
+
+            const elapsedSeconds = (performance.now() - start) / 1000;
+            
+            const responseVulns = data.vulnerabilities || [];
+            activeVulnerabilities = responseVulns.map(v => ({
+                file: v.file || "pasted_snippet.py",
+                vulnerability: v.vulnerability,
+                confidence: v.confidence,
+                code: codeText
+            }));
+
+            if (activeVulnerabilities.length === 0) {
+                activeVulnerabilities = [{
+                    file: "pasted_snippet.py",
+                    vulnerability: "Safe Code",
+                    confidence: 1.0,
+                    code: codeText
+                }];
+            }
+
+            renderVulnerabilitiesTable(activeVulnerabilities.filter(v => v.vulnerability !== "Safe Code"));
+            updateStatsDashboard(activeVulnerabilities, 1, elapsedSeconds);
+            displayCode(activeVulnerabilities[0].file, activeVulnerabilities[0].code, activeVulnerabilities[0].vulnerability);
+        })
+        .catch(err => {
+            runCodeBtn.disabled = false;
+            runCodeBtn.innerHTML = '<span class="material-symbols-outlined">search</span> Scan Snippet';
+            console.error("Snippet scan error:", err);
+            alert("An error occurred during snippet scanning.");
         });
     });
 });
 </script>
-</body></html>
+</body>
+</html>
