@@ -12,27 +12,78 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import LinearSVC
 from sklearn.calibration import CalibratedClassifierCV
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import precision_recall_curve, f1_score, precision_score, recall_score
+import scipy.sparse as sp
+
+
+def extract_heuristics(df: pd.DataFrame) -> np.ndarray:
+    """Extract custom security heuristic features from code snippet strings."""
+    heuristics = []
+    for code in df["cleaned_code"].fillna(""):
+        code_lower = code.lower()
+        
+        # 1. Unsafe eval/exec
+        has_eval = 1.0 if "eval(" in code_lower or "exec(" in code_lower else 0.0
+        
+        # 2. Command injection patterns
+        has_system = 1.0 if any(cmd in code_lower for cmd in ["os.system", "os.popen", "subprocess.run", "subprocess.popen", "subprocess.call"]) else 0.0
+        
+        # 3. SQL injection indicators (SQL keyword + execution pattern)
+        has_sql = 0.0
+        if any(sql in code_lower for sql in ["select ", "insert ", "update ", "delete "]) and (".execute(" in code_lower or ".executemany(" in code_lower):
+            has_sql = 1.0
+            
+        # 4. String format with SQL (often dangerous)
+        has_format_sql = 0.0
+        if has_sql and any(fmt in code_lower for fmt in ["f'", 'f"', "%", ".format("]):
+            has_format_sql = 1.0
+            
+        # 5. Cross-site scripting (XSS) indicators
+        has_xss = 1.0 if "render_template_string" in code_lower or "markup(" in code_lower else 0.0
+        
+        heuristics.append([has_eval, has_system, has_sql, has_format_sql, has_xss])
+        
+    return np.array(heuristics, dtype=np.float32)
 
 
 def evaluate_candidate(
     vectorizer: TfidfVectorizer,
+    scaler: StandardScaler,
     model: any,
-    X_train: pd.Series,
-    y_train: pd.Series,
-    X_val: pd.Series,
-    y_val: pd.Series,
+    train_df: pd.DataFrame,
+    val_df: pd.DataFrame,
 ) -> tuple[float, float, float, float, any]:
     """Train a candidate, compute probabilities on validation, and return metrics at threshold 0.5."""
-    # Transform text
-    X_train_vec = vectorizer.fit_transform(X_train)
-    X_val_vec = vectorizer.transform(X_val)
+    # Transform text features
+    X_train_text = vectorizer.fit_transform(train_df["cleaned_code"])
+    X_val_text = vectorizer.transform(val_df["cleaned_code"])
+    
+    # Scale numerical features
+    metadata_cols = ["nloc", "complexity", "token_count", "top_nesting_level"]
+    X_train_meta = train_df[metadata_cols].fillna(0.0).values.astype(np.float32)
+    X_val_meta = val_df[metadata_cols].fillna(0.0).values.astype(np.float32)
+    
+    X_train_meta_scaled = scaler.fit_transform(X_train_meta)
+    X_val_meta_scaled = scaler.transform(X_val_meta)
+    
+    # Extract custom heuristics
+    X_train_heur = extract_heuristics(train_df)
+    X_val_heur = extract_heuristics(val_df)
+    
+    # Combine features
+    X_train_all = sp.hstack([X_train_text, X_train_meta_scaled, X_train_heur], format="csr")
+    X_val_all = sp.hstack([X_val_text, X_val_meta_scaled, X_val_heur], format="csr")
+    
+    y_train = train_df["label"]
+    y_val = val_df["label"]
     
     # Train
-    model.fit(X_train_vec, y_train)
+    model.fit(X_train_all, y_train)
     
     # Predict
-    probs = model.predict_proba(X_val_vec)[:, 1]
+    probs = model.predict_proba(X_val_all)[:, 1]
     preds = (probs >= 0.5).astype(int)
     
     # Calculate metrics
@@ -80,42 +131,38 @@ def train_pipeline(data_path: Path, output_dir: Path) -> dict:
     train_df = df[df["split"] == "train"]
     val_df = df[df["split"] == "val"]
     
-    X_train, y_train = train_df["cleaned_code"], train_df["label"]
-    X_val, y_val = val_df["cleaned_code"], val_df["label"]
+    y_val = val_df["label"]
     
     # Define candidate pipelines
     candidates = [
         {
-            "name": "word_tfidf_logistic_regression",
+            "name": "enhanced_word_tfidf_random_forest",
             "vectorizer": TfidfVectorizer(
                 analyzer="word",
                 ngram_range=(1, 2),
                 max_features=5000,
                 token_pattern=r"(?u)\b\w+\b",
             ),
-            "model": LogisticRegression(C=1.0, class_weight="balanced", random_state=42, max_iter=1000),
+            "model": RandomForestClassifier(n_estimators=100, max_depth=15, class_weight="balanced", random_state=42, n_jobs=1),
         },
         {
-            "name": "char_tfidf_logistic_regression",
+            "name": "enhanced_char_tfidf_random_forest",
             "vectorizer": TfidfVectorizer(
                 analyzer="char",
                 ngram_range=(3, 5),
                 max_features=10000,
             ),
-            "model": LogisticRegression(C=1.0, class_weight="balanced", random_state=42, max_iter=1000),
+            "model": RandomForestClassifier(n_estimators=100, max_depth=15, class_weight="balanced", random_state=42, n_jobs=1),
         },
         {
-            "name": "char_tfidf_linear_svm",
+            "name": "enhanced_word_tfidf_logistic_regression",
             "vectorizer": TfidfVectorizer(
-                analyzer="char",
-                ngram_range=(3, 5),
-                max_features=10000,
+                analyzer="word",
+                ngram_range=(1, 2),
+                max_features=5000,
+                token_pattern=r"(?u)\b\w+\b",
             ),
-            "model": CalibratedClassifierCV(
-                estimator=LinearSVC(C=1.0, dual=False, class_weight="balanced", random_state=42),
-                method="sigmoid",
-                cv=5,
-            ),
+            "model": LogisticRegression(C=0.5, class_weight="balanced", random_state=42, max_iter=1000),
         },
     ]
     
@@ -123,19 +170,20 @@ def train_pipeline(data_path: Path, output_dir: Path) -> dict:
     best_f1 = -1.0
     best_metrics = {}
     best_vectorizer = None
+    best_scaler = None
     best_model = None
     best_probs = None
     
     print("Training candidate models...")
     for cand in candidates:
         name = cand["name"]
+        scaler = StandardScaler()
         f1, prec, rec, probs, trained_model = evaluate_candidate(
             cand["vectorizer"],
+            scaler,
             cand["model"],
-            X_train,
-            y_train,
-            X_val,
-            y_val,
+            train_df,
+            val_df,
         )
         print(f"- {name}: F1={f1:.4f}, Precision={prec:.4f}, Recall={rec:.4f}")
         
@@ -144,6 +192,7 @@ def train_pipeline(data_path: Path, output_dir: Path) -> dict:
             best_name = name
             best_metrics = {"f1_at_0.5": f1, "precision_at_0.5": prec, "recall_at_0.5": rec}
             best_vectorizer = cand["vectorizer"]
+            best_scaler = scaler
             best_model = trained_model
             best_probs = probs
             
@@ -162,6 +211,7 @@ def train_pipeline(data_path: Path, output_dir: Path) -> dict:
     output_dir.mkdir(parents=True, exist_ok=True)
     joblib.dump(best_model, output_dir / "vulnerability_model.pkl")
     joblib.dump(best_vectorizer, output_dir / "tfidf_vectorizer.pkl")
+    joblib.dump(best_scaler, output_dir / "scaler.pkl")
     
     config = {
         "model_name": best_name,

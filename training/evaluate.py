@@ -19,15 +19,60 @@ from sklearn.metrics import (
 )
 
 
+def extract_heuristics(df: pd.DataFrame) -> np.ndarray:
+    """Extract custom security heuristic features from code snippet strings."""
+    heuristics = []
+    for code in df["cleaned_code"].fillna(""):
+        code_lower = code.lower()
+        
+        # 1. Unsafe eval/exec
+        has_eval = 1.0 if "eval(" in code_lower or "exec(" in code_lower else 0.0
+        
+        # 2. Command injection patterns
+        has_system = 1.0 if any(cmd in code_lower for cmd in ["os.system", "os.popen", "subprocess.run", "subprocess.popen", "subprocess.call"]) else 0.0
+        
+        # 3. SQL injection indicators (SQL keyword + execution pattern)
+        has_sql = 0.0
+        if any(sql in code_lower for sql in ["select ", "insert ", "update ", "delete "]) and (".execute(" in code_lower or ".executemany(" in code_lower):
+            has_sql = 1.0
+            
+        # 4. String format with SQL (often dangerous)
+        has_format_sql = 0.0
+        if has_sql and any(fmt in code_lower for fmt in ["f'", 'f"', "%", ".format("]):
+            has_format_sql = 1.0
+            
+        # 5. Cross-site scripting (XSS) indicators
+        has_xss = 1.0 if "render_template_string" in code_lower or "markup(" in code_lower else 0.0
+        
+        heuristics.append([has_eval, has_system, has_sql, has_format_sql, has_xss])
+        
+    return np.array(heuristics, dtype=np.float32)
+
+
 def evaluate_split(
     df: pd.DataFrame,
     vectorizer: any,
+    scaler: any,
     model: any,
     threshold: float,
 ) -> tuple[dict, pd.DataFrame]:
     """Evaluate predictions on the split and return metrics and prediction df."""
-    X_vec = vectorizer.transform(df["cleaned_code"])
-    probs = model.predict_proba(X_vec)[:, 1]
+    # TF-IDF
+    X_text = vectorizer.transform(df["cleaned_code"])
+    
+    # Metadata
+    metadata_cols = ["nloc", "complexity", "token_count", "top_nesting_level"]
+    X_meta = df[metadata_cols].fillna(0.0).values.astype(np.float32)
+    X_meta_scaled = scaler.transform(X_meta)
+    
+    # Heuristics
+    X_heur = extract_heuristics(df)
+    
+    # Combine
+    import scipy.sparse as sp
+    X_all = sp.hstack([X_text, X_meta_scaled, X_heur], format="csr")
+    
+    probs = model.predict_proba(X_all)[:, 1]
     preds = (probs >= threshold).astype(int)
     
     y = df["label"]
@@ -206,6 +251,7 @@ def main() -> None:
     # Load model artifacts
     model = joblib.load(args.artifacts_dir / "vulnerability_model.pkl")
     vectorizer = joblib.load(args.artifacts_dir / "tfidf_vectorizer.pkl")
+    scaler = joblib.load(args.artifacts_dir / "scaler.pkl")
     config = json.loads((args.artifacts_dir / "model_config.json").read_text(encoding="utf-8"))
     
     threshold = config["optimal_threshold"]
@@ -216,7 +262,7 @@ def main() -> None:
     test_df = df[df["split"] == "test"]
     
     # Evaluate
-    metrics, eval_df = evaluate_split(test_df, vectorizer, model, threshold)
+    metrics, eval_df = evaluate_split(test_df, vectorizer, scaler, model, threshold)
     cwe_perf = analyze_cwe_performance(eval_df)
     nloc_perf = analyze_nloc_performance(eval_df)
     

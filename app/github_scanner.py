@@ -12,6 +12,7 @@ import tempfile
 import zipfile
 import io
 import requests
+from concurrent.futures import ThreadPoolExecutor
 from app.scanner import CodeScanner
 
 
@@ -83,29 +84,45 @@ class GitHubScanner:
         return extract_dir
 
     # ── Scan engine ─────────────────────────────────────────────────────────────
-    def _scan_directory(self, github_url: str, repo_dir: str) -> dict:
-        files_scanned = 0
-        vulnerabilities = []
+    def _scan_single_file(self, root: str, file: str, repo_dir: str) -> dict | None:
+        """Scan a single Python file and return vulnerability details if found."""
+        file_path = os.path.join(root, file)
+        try:
+            with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+                raw_code = f.read()
+            vuln_type, confidence = self.engine.scan_code_snippet(raw_code)
+            if vuln_type != "Safe Code":
+                clean_name = file_path.replace(repo_dir, "").lstrip("/\\")
+                return {
+                    "file":          clean_name,
+                    "vulnerability": vuln_type,
+                    "confidence":    confidence,
+                    "code":          raw_code
+                }
+        except Exception:
+            pass
+        return None
 
+    def _scan_directory(self, github_url: str, repo_dir: str) -> dict:
+        file_tasks = []
         for root, _, files in os.walk(repo_dir):
             for file in files:
                 if file.endswith(".py"):
-                    files_scanned += 1
-                    file_path = os.path.join(root, file)
-                    try:
-                        with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
-                            raw_code = f.read()
-                        vuln_type, confidence = self.engine.scan_code_snippet(raw_code)
-                        if vuln_type != "Safe Code":
-                            clean_name = file_path.replace(repo_dir, "").lstrip("/\\")
-                            vulnerabilities.append({
-                                "file":          clean_name,
-                                "vulnerability": vuln_type,
-                                "confidence":    confidence,
-                                "code":          raw_code
-                            })
-                    except Exception:
-                        pass
+                    file_tasks.append((root, file))
+
+        vulnerabilities = []
+        files_scanned = len(file_tasks)
+        
+        # Parallelize lexical analysis and model predictions using thread pool
+        with ThreadPoolExecutor(max_workers=8) as executor:
+            futures = [
+                executor.submit(self._scan_single_file, root, file, repo_dir)
+                for root, file in file_tasks
+            ]
+            for fut in futures:
+                res = fut.result()
+                if res is not None:
+                    vulnerabilities.append(res)
 
         return {
             "target":          github_url,

@@ -8,6 +8,7 @@ class CodeScanner:
         self,
         model_path='artifacts/vulnerability_model.pkl',
         vectorizer_path='artifacts/tfidf_vectorizer.pkl',
+        scaler_path='artifacts/scaler.pkl',
         config_path='artifacts/model_config.json'
     ):
         """
@@ -17,10 +18,11 @@ class CodeScanner:
         try:
             self.model = joblib.load(model_path)
             self.vectorizer = joblib.load(vectorizer_path)
+            self.scaler = joblib.load(scaler_path)
             print("[+] Models loaded successfully.")
         except FileNotFoundError as e:
             print(f"[-] Error: Could not find model files. {e}")
-            print("    Please ensure 'vulnerability_model.pkl' and 'tfidf_vectorizer.pkl' are built and exported.")
+            print("    Please ensure 'vulnerability_model.pkl', 'tfidf_vectorizer.pkl', and 'scaler.pkl' are built and exported.")
             exit(1)
             
         # Load calibrated threshold
@@ -92,10 +94,84 @@ class CodeScanner:
             return "Cross-Site Scripting (XSS)"
         return "Vulnerable Code"
         
+    def calculate_metrics(self, raw_code: str) -> dict:
+        """Estimate code metrics (nloc, complexity, token_count, nesting) dynamically."""
+        if not raw_code:
+            return {"nloc": 0.0, "complexity": 1.0, "token_count": 0.0, "top_nesting_level": 0.0}
+            
+        lines = raw_code.splitlines()
+        
+        # 1. nloc: count non-empty and non-comment lines
+        nloc = 0.0
+        for line in lines:
+            stripped = line.strip()
+            if stripped and not stripped.startswith("#"):
+                nloc += 1.0
+                
+        # 2. complexity: cyclomatic complexity estimate (decision points + 1)
+        decision_keywords = ["if", "elif", "for", "while", "except", "with", "and", "or"]
+        complexity = 1.0
+        clean_text = self.clean_code(raw_code)
+        words = re.findall(r"\b\w+\b", clean_text.lower())
+        for word in words:
+            if word in decision_keywords:
+                complexity += 1.0
+                
+        # 3. token_count: rough count of code tokens
+        tokens = re.findall(r"\w+|[^\w\s]", raw_code)
+        token_count = float(len(tokens))
+        
+        # 4. top_nesting_level: maximum nesting level (using line indentation)
+        max_nesting = 0.0
+        for line in lines:
+            if not line.strip():
+                continue
+            indent = 0
+            for char in line:
+                if char == " ":
+                    indent += 1
+                elif char == "\t":
+                    indent += 4
+                else:
+                    break
+            nesting = indent // 4
+            if nesting > max_nesting:
+                max_nesting = nesting
+                
+        return {
+            "nloc": nloc,
+            "complexity": complexity,
+            "token_count": token_count,
+            "top_nesting_level": float(max_nesting)
+        }
+
+    def extract_heuristics_single(self, code_string: str) -> list[float]:
+        """Extract security heuristics for a single code snippet."""
+        code_lower = code_string.lower()
+        
+        has_eval = 1.0 if "eval(" in code_lower or "exec(" in code_lower else 0.0
+        
+        has_system = 1.0 if any(cmd in code_lower for cmd in ["os.system", "os.popen", "subprocess.run", "subprocess.popen", "subprocess.call"]) else 0.0
+        
+        has_sql = 0.0
+        if any(sql in code_lower for sql in ["select ", "insert ", "update ", "delete "]) and (".execute(" in code_lower or ".executemany(" in code_lower):
+            has_sql = 1.0
+            
+        has_format_sql = 0.0
+        if has_sql and any(fmt in code_lower for fmt in ["f'", 'f"', "%", ".format("]):
+            has_format_sql = 1.0
+            
+        has_xss = 1.0 if "render_template_string" in code_lower or "markup(" in code_lower else 0.0
+        
+        return [has_eval, has_system, has_sql, has_format_sql, has_xss]
+
     def scan_code_snippet(self, raw_code):
         """
         Takes raw Python code, preprocesses it, vectorizes it, and predicts vulnerabilities.
         """
+        import scipy.sparse as sp
+        import numpy as np
+        
         # 1. Clean it so it looks exactly like the training data
         cleaned_code = self.clean_code(raw_code)
         
@@ -105,10 +181,21 @@ class CodeScanner:
         # 2. Convert text to Mathematical Array (TF-IDF)
         vectorized_text = self.vectorizer.transform([cleaned_code])
         
-        # 3. Get the probability of Vulnerable class (class 1)
-        prob = self.model.predict_proba(vectorized_text)[0][1]
+        # 3. Calculate dynamic metrics and scale them
+        metrics = self.calculate_metrics(raw_code)
+        meta_vals = [[metrics["nloc"], metrics["complexity"], metrics["token_count"], metrics["top_nesting_level"]]]
+        meta_scaled = self.scaler.transform(meta_vals)
         
-        # 4. Classify using the calibrated threshold
+        # 4. Extract heuristics
+        heuristics = [self.extract_heuristics_single(cleaned_code)]
+        
+        # 5. Combine features
+        X_all = sp.hstack([vectorized_text, meta_scaled, heuristics], format="csr")
+        
+        # 6. Get the probability of Vulnerable class (class 1)
+        prob = self.model.predict_proba(X_all)[0][1]
+        
+        # 7. Classify using the calibrated threshold
         if prob >= self.threshold:
             vuln_type = self.identify_vuln_type(raw_code)
             confidence = prob
