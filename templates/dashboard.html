@@ -7,7 +7,7 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none' stroke='%23d0bcff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='18' stroke-width='2' /%3E%3Crect x='42' y='48' width='16' height='12' rx='2' fill='none' stroke-width='2' /%3E%3Cpath d='M45 48 v-4 a5 5 0 0 1 10 0 v4' stroke-width='2' /%3E%3Ccircle cx='50' cy='53' r='1.5' fill='%23d0bcff' /%3E%3Cline x1='50' y1='54.5' x2='50' y2='57' stroke-width='1.5' /%3E%3Cline x1='50' y1='32' x2='50' y2='16' /%3E%3Ccircle cx='50' cy='14' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M62 38 l8 -8 h10' /%3E%3Ccircle cx='82' cy='30' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M68 50 h12' /%3E%3Ccircle cx='82' cy='50' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M62 62 l8 8 h10' /%3E%3Ccircle cx='82' cy='70' r='2.5' fill='%23d0bcff' /%3E%3Cline x1='50' y1='68' x2='50' y2='84' /%3E%3Ccircle cx='50' cy='86' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M38 62 l-8 8 h-10' /%3E%3Ccircle cx='18' cy='70' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M32 50 h-12' /%3E%3Ccircle cx='18' cy='50' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M38 38 l-8 -8 h-10' /%3E%3Ccircle cx='18' cy='30' r='2.5' fill='%23d0bcff' /%3E%3C/svg%3E">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Geist:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Outfit:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
     <style>
         body {
@@ -111,8 +111,8 @@
                         "container_max_width": "1440px"
                     },
                     "fontFamily": {
-                        "display-lg": ["Geist"],
-                        "headline-md": ["Geist"],
+                        "display-lg": ["Outfit"],
+                        "headline-md": ["Outfit"],
                         "body-sm": ["Inter"],
                         "mono-label": ["JetBrains Mono"],
                         "body-base": ["Inter"]
@@ -157,6 +157,7 @@
 </a>
 <nav class="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-8">
 <a class="text-on-surface-variant hover:text-on-surface transition-colors font-display-lg text-body-base" href="/">Home</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-display-lg text-body-base" href="/overview">Overview</a>
 <a class="text-primary font-semibold border-b-2 border-primary pb-1 font-display-lg text-body-base" href="/dashboard">Dashboard</a>
 <a class="text-on-surface-variant hover:text-on-surface transition-colors font-display-lg text-body-base" href="/docs">Docs</a>
 </nav>
@@ -397,8 +398,9 @@
 <span class="opacity-50">|</span>
 <span>© 2026 Sentinel Security Engine.</span>
 <div class="flex items-center gap-6">
-<a class="hover:text-primary transition-colors" href="/docs">Docs</a>
+<a class="hover:text-primary transition-colors" href="/overview">Overview</a>
 <a class="hover:text-primary transition-colors" href="/dashboard">Dashboard</a>
+<a class="hover:text-primary transition-colors" href="/docs">Docs</a>
 <a class="hover:text-primary transition-colors" href="https://github.com/WhiteDevil-06/ai-code-vulnerability-detection-engine">GitHub</a>
 </div>
 </footer>

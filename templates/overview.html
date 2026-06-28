@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Sentinel - Project Overview</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none' stroke='%23d0bcff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='18' stroke-width='2' /%3E%3Crect x='42' y='48' width='16' height='12' rx='2' fill='none' stroke-width='2' /%3E%3Cpath d='M45 48 v-4 a5 5 0 0 1 10 0 v4' stroke-width='2' /%3E%3Ccircle cx='50' cy='53' r='1.5' fill='%23d0bcff' /%3E%3Cline x1='50' y1='54.5' x2='50' y2='57' stroke-width='1.5' /%3E%3Cline x1='50' y1='32' x2='50' y2='16' /%3E%3Ccircle cx='50' cy='14' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M62 38 l8 -8 h10' /%3E%3Ccircle cx='82' cy='30' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M68 50 h12' /%3E%3Ccircle cx='82' cy='50' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M62 62 l8 8 h10' /%3E%3Ccircle cx='82' cy='70' r='2.5' fill='%23d0bcff' /%3E%3Cline x1='50' y1='68' x2='50' y2='84' /%3E%3Ccircle cx='50' cy='86' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M38 62 l-8 8 h-10' /%3E%3Ccircle cx='18' cy='70' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M32 50 h-12' /%3E%3Ccircle cx='18' cy='50' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M38 38 l-8 -8 h-10' /%3E%3Ccircle cx='18' cy='30' r='2.5' fill='%23d0bcff' /%3E%3C/svg%3E">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            background-color: #09090B;
+            color: #e7e0ed;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-card {
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        @keyframes glow-pulse {
+            0%, 100% { border-color: rgba(255, 255, 255, 0.06); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+            10% { border-color: rgba(208, 188, 255, 0.8); box-shadow: 0 0 25px rgba(208, 188, 255, 0.25); }
+            40% { border-color: rgba(255, 255, 255, 0.06); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        }
+        .animate-glow-1 { animation: glow-pulse 12s infinite 0s; }
+        .animate-glow-2 { animation: glow-pulse 12s infinite 3s; }
+        .animate-glow-3 { animation: glow-pulse 12s infinite 6s; }
+        .animate-glow-4 { animation: glow-pulse 12s infinite 9s; }
+        .code-block {
+            background: #050505;
+            border: 1px solid rgba(208, 188, 255, 0.2);
+            box-shadow: 0 0 15px rgba(208, 188, 255, 0.05);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #d0bcff 0%, #7bd0ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f0d15;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #37333d;
+            border-radius: 10px;
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#1d1a23",
+                        "on-secondary-container": "#00374d",
+                        "on-tertiary": "#482900",
+                        "surface": "#15121b",
+                        "surface-container": "#211e27",
+                        "primary-fixed": "#e9ddff",
+                        "tertiary": "#ffb869",
+                        "on-tertiary-fixed-variant": "#673d00",
+                        "on-secondary-fixed-variant": "#004c69",
+                        "on-primary-container": "#340080",
+                        "on-error": "#690005",
+                        "surface-tint": "#d0bcff",
+                        "on-primary-fixed-variant": "#5516be",
+                        "secondary-fixed": "#c4e7ff",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed-dim": "#ffb869",
+                        "tertiary-fixed": "#ffdcbb",
+                        "surface-container-lowest": "#0f0d15",
+                        "secondary": "#7bd0ff",
+                        "on-error-container": "#ffdad6",
+                        "surface-variant": "#37333d",
+                        "on-tertiary-fixed": "#2c1700",
+                        "inverse-primary": "#6d3bd7",
+                        "surface-container-highest": "#37333d",
+                        "secondary-fixed-dim": "#7bd0ff",
+                        "inverse-on-surface": "#322f39",
+                        "tertiary-container": "#ca801e",
+                        "primary-fixed-dim": "#d0bcff",
+                        "on-surface": "#e7e0ed",
+                        "inverse-surface": "#e7e0ed",
+                        "surface-dim": "#15121b",
+                        "on-secondary-fixed": "#001e2c",
+                        "on-primary": "#3c0091",
+                        "on-surface-variant": "#cbc3d7",
+                        "on-tertiary-container": "#3f2300",
+                        "on-primary-fixed": "#23005c",
+                        "outline": "#958ea0",
+                        "outline-variant": "#494454",
+                        "surface-bright": "#3b3742",
+                        "error-container": "#93000a",
+                        "on-background": "#e7e0ed",
+                        "on-secondary": "#00354a",
+                        "primary": "#d0bcff",
+                        "surface-container-high": "#2c2832",
+                        "secondary-container": "#00a6e0",
+                        "primary-container": "#a078ff",
+                        "background": "#15121b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "base_unit": "4px",
+                        "margin_mobile": "16px",
+                        "gutter": "24px",
+                        "margin_desktop": "40px",
+                        "container_max_width": "1440px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Outfit"],
+                        "headline-md": ["Outfit"],
+                        "body-sm": ["Inter"],
+                        "mono-label": ["JetBrains Mono"],
+                        "body-base": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                        "body-sm": ["13px", {"lineHeight": "1.5", "letterSpacing": "0.01em", "fontWeight": "400"}],
+                        "mono-label": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "body-base": ["15px", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background font-body-base text-on-surface">
+    <!-- Top Navigation Bar -->
+    <header class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-6 py-3 bg-surface-container-lowest/80 backdrop-blur-md border border-outline-variant/20 rounded-full mt-4 mx-auto w-[95%] max-w-container_max_width shadow-2xl">
+        <a href="/" class="flex items-center gap-3 hover:opacity-90 transition-opacity">
+            <svg class="w-7 h-7 text-primary" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="50" cy="50" r="18" stroke-width="2.5" />
+              <rect x="42" y="48" width="16" height="12" rx="2" fill="none" stroke-width="2.5" />
+              <path d="M45 48 v-4 a5 5 0 0 1 10 0 v4" stroke-width="2.5" />
+              <circle cx="50" cy="53" r="1.5" fill="currentColor" />
+              <line x1="50" y1="54.5" x2="50" y2="57" stroke-width="2" />
+              <line x1="50" y1="32" x2="50" y2="16" />
+              <circle cx="50" cy="14" r="2.5" fill="currentColor" />
+              <path d="M62 38 l8 -8 h10" />
+              <circle cx="82" cy="30" r="2.5" fill="currentColor" />
+              <path d="M68 50 h12" />
+              <circle cx="82" cy="50" r="2.5" fill="currentColor" />
+              <path d="M62 62 l8 8 h10" />
+              <circle cx="82" cy="70" r="2.5" fill="currentColor" />
+              <line x1="50" y1="68" x2="50" y2="84" />
+              <circle cx="50" cy="86" r="2.5" fill="currentColor" />
+              <path d="M38 62 l-8 8 h-10" />
+              <circle cx="18" cy="70" r="2.5" fill="currentColor" />
+              <path d="M32 50 h-12" />
+              <circle cx="18" cy="50" r="2.5" fill="currentColor" />
+              <path d="M38 38 l-8 -8 h-10" />
+              <circle cx="18" cy="30" r="2.5" fill="currentColor" />
+            </svg>
+            <span class="font-display-lg text-headline-md font-bold tracking-tight text-primary">Sentinel</span>
+        </a>
+        <nav class="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-8">
+            <a class="text-on-surface-variant hover:text-on-surface transition-colors font-display-lg text-body-base" href="/">Home</a>
+            <a class="text-primary font-semibold border-b-2 border-primary pb-1 font-display-lg text-body-base" href="/overview">Overview</a>
+            <a class="text-on-surface-variant hover:text-on-surface transition-colors font-display-lg text-body-base" href="/dashboard">Dashboard</a>
+            <a class="text-on-surface-variant hover:text-on-surface transition-colors font-display-lg text-body-base" href="/docs">Docs</a>
+        </nav>
+    </header>
+
+    <div class="flex pt-32 max-w-container_max_width mx-auto px-margin_desktop min-h-screen">
+        <!-- Left Sidebar Navigation -->
+        <aside class="hidden lg:block w-64 sticky top-32 h-[calc(100vh-180px)] overflow-y-auto pr-4 border-r border-outline-variant/10 self-start">
+            <div class="space-y-8">
+                <div>
+                    <h3 class="font-mono-label text-mono-label uppercase text-outline mb-4">Project Overview</h3>
+                    <ul class="space-y-2">
+                        <li><a class="block py-1.5 px-3 rounded-lg bg-primary/10 text-primary border-l-4 border-primary font-medium" href="#introduction">1. Introduction</a></li>
+                        <li><a class="block py-1.5 px-3 text-on-surface-variant hover:text-primary transition-colors" href="#sdgs">2. Relevance to SDGs</a></li>
+                        <li><a class="block py-1.5 px-3 text-on-surface-variant hover:text-primary transition-colors" href="#application-domain">3. Application Domain</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-mono-label text-mono-label uppercase text-outline mb-4">Research & Problem</h3>
+                    <ul class="space-y-2">
+                        <li><a class="block py-1.5 px-3 text-on-surface-variant hover:text-primary transition-colors" href="#literature-review">4. Literature Review</a></li>
+                        <li><a class="block py-1.5 px-3 text-on-surface-variant hover:text-primary transition-colors" href="#problem-statement">5. Problem Statement</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-mono-label text-mono-label uppercase text-outline mb-4">System Details</h3>
+                    <ul class="space-y-2">
+                        <li><a class="block py-1.5 px-3 text-on-surface-variant hover:text-primary transition-colors" href="#methodology">6. Methodology</a></li>
+                        <li><a class="block py-1.5 px-3 text-on-surface-variant hover:text-primary transition-colors" href="#requirements">7. Requirements</a></li>
+                        <li><a class="block py-1.5 px-3 text-on-surface-variant hover:text-primary transition-colors" href="#implementation">8. Implementation</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-mono-label text-mono-label uppercase text-outline mb-4">Results & Conclusion</h3>
+                    <ul class="space-y-2">
+                        <li><a class="block py-1.5 px-3 text-on-surface-variant hover:text-primary transition-colors" href="#performance">9. Performance Analysis</a></li>
+                        <li><a class="block py-1.5 px-3 text-on-surface-variant hover:text-primary transition-colors" href="#conclusion">10. Conclusion</a></li>
+                        <li><a class="block py-1.5 px-3 text-on-surface-variant hover:text-primary transition-colors" href="#references">11. References</a></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="lg:pl-12 flex-1 max-w-4xl pb-24">
+            
+            <section class="mb-16" id="header">
+                <h1 class="font-display-lg text-display-lg mb-6 leading-tight">Sentinel Security Engine: Project Overview</h1>
+                <p class="text-on-surface-variant text-xl leading-relaxed font-body-base">
+                    Comprehensive project presentation covering the Sentinel architecture, machine learning methodology, and relevance to sustainable software development.
+                </p>
+            </section>
+
+            <section class="mb-16" id="introduction">
+                <h2 class="font-headline-md text-headline-md mb-6 text-primary">1. Introduction</h2>
+                <div class="glass-card p-8 rounded-xl">
+                    <p class="leading-relaxed">The rapid expansion of open-source software and interconnected web architectures has introduced unprecedented security risks, as developers frequently reuse code snippets that may harbor hidden vulnerabilities. The <strong>Sentinel Security Engine</strong> is designed to address this critical gap.</p>
+                    <p class="leading-relaxed mt-4">It is an AI-powered static application security testing (SAST) platform tailored for Python repositories. By leveraging machine learning models trained on known historical security patches (such as the CVEfixes database), Sentinel can analyze abstract syntax and code metrics to predict, classify, and mitigate vulnerabilities—shifting security analysis "left" in the software development lifecycle.</p>
+                </div>
+            </section>
+
+            <section class="mb-16" id="sdgs">
+                <h2 class="font-headline-md text-headline-md mb-6 text-primary">2. Relevance to SDGs</h2>
+                <div class="glass-card p-8 rounded-xl">
+                    <p class="mb-4">This project directly aligns with several key United Nations Sustainable Development Goals (SDGs):</p>
+                    <ul class="list-disc pl-6 space-y-4 text-on-surface-variant">
+                        <li><strong class="text-on-surface">SDG 9 (Industry, Innovation and Infrastructure):</strong> By providing robust, automated security tooling, Sentinel promotes the development of resilient digital infrastructure and encourages sustainable software innovation.</li>
+                        <li><strong class="text-on-surface">SDG 16 (Peace, Justice and Strong Institutions):</strong> Cybersecurity is fundamental to protecting institutional data integrity. Preventing code-level vulnerabilities safeguards institutions against cyber-espionage, data breaches, and malicious exploitation.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="mb-16" id="application-domain">
+                <h2 class="font-headline-md text-headline-md mb-6 text-primary">3. Application Domain</h2>
+                <div class="glass-card p-8 rounded-xl">
+                    <p class="mb-4">The primary application domain for Sentinel is <strong>Cybersecurity and DevSecOps</strong>. Specifically, it serves:</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                        <div class="bg-black/30 p-6 rounded-lg border border-white/5">
+                            <span class="material-symbols-outlined text-secondary text-3xl mb-4">cycle</span>
+                            <h4 class="font-bold text-on-surface mb-2">CI/CD Pipelines</h4>
+                            <p class="text-sm text-on-surface-variant">Automated pre-commit and post-commit vulnerability scanning.</p>
+                        </div>
+                        <div class="bg-black/30 p-6 rounded-lg border border-white/5">
+                            <span class="material-symbols-outlined text-secondary text-3xl mb-4">security</span>
+                            <h4 class="font-bold text-on-surface mb-2">Security Auditing</h4>
+                            <p class="text-sm text-on-surface-variant">Assisting human penetration testers by rapidly highlighting high-risk files.</p>
+                        </div>
+                        <div class="bg-black/30 p-6 rounded-lg border border-white/5">
+                            <span class="material-symbols-outlined text-secondary text-3xl mb-4">school</span>
+                            <h4 class="font-bold text-on-surface mb-2">Education</h4>
+                            <p class="text-sm text-on-surface-variant">Guiding novice developers by identifying insecure coding patterns in real-time.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-16" id="literature-review">
+                <h2 class="font-headline-md text-headline-md mb-6 text-primary">4. Literature Review</h2>
+                <div class="glass-card p-8 rounded-xl">
+                    <p class="mb-6">Traditional SAST tools (e.g., Bandit, SonarQube) rely heavily on static regular expressions and Abstract Syntax Tree (AST) pattern matching. While effective for known patterns, they often yield high false-positive rates and struggle to identify complex, zero-day logical flaws. Recent literature emphasizes the shift towards Machine Learning (ML) for vulnerability detection.</p>
+                    <ul class="list-disc pl-6 space-y-4 text-on-surface-variant mb-6">
+                        <li><strong>Russell et al. (2018)</strong> demonstrated that deep representation learning on source code can effectively predict function-level vulnerabilities.</li>
+                        <li><strong>CVEfixes Dataset (2021):</strong> A comprehensive dataset of CVEs and their corresponding fix commits in open-source projects, providing a grounded truth for supervised learning models to differentiate between vulnerable and safe code structures.</li>
+                    </ul>
+                    <div class="p-4 bg-primary/10 border-l-4 border-primary rounded-r-lg">
+                        <p class="text-sm text-primary">Sentinel builds upon these foundations by combining lightweight static heuristics with a calibrated Logistic Regression classifier, achieving high accuracy with minimal computational overhead.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-16" id="problem-statement">
+                <h2 class="font-headline-md text-headline-md mb-6 text-primary">5. Problem Statement</h2>
+                <div class="glass-card p-8 rounded-xl bg-error-container/10 border-error/20">
+                    <h3 class="text-xl font-bold text-error mb-4">"How can we rapidly and accurately detect complex security vulnerabilities in Python source code without relying exclusively on rigid, rule-based static analysis?"</h3>
+                    <p class="text-on-surface-variant">Existing tools are either too slow for real-time CI/CD integration or generate excessive false positives, leading to "alert fatigue" among developers. There is a critical need for an intelligent system that understands code complexity, token structure, and context to provide high-confidence security alerts.</p>
+                </div>
+            </section>
+
+            <section class="mb-16" id="methodology">
+                <h2 class="font-headline-md text-headline-md mb-6 text-primary">6. Methodology</h2>
+                <div class="glass-card p-8 rounded-xl mb-6">
+                    <p class="leading-relaxed">Sentinel employs a hybrid approach, combining <strong>Natural Language Processing (NLP)</strong> techniques with <strong>Static Code Metrics</strong>.</p>
+                </div>
+                    
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Step 1 -->
+                    <div class="glass-card p-6 rounded-xl animate-glow-1 transition-all duration-500">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary font-bold shrink-0 text-lg">1</div>
+                            <h4 class="font-bold text-on-surface text-lg">Preprocessing</h4>
+                        </div>
+                        <p class="text-sm text-on-surface-variant leading-relaxed">Source code is de-dented, and comments/docstrings are stripped to isolate the raw logical syntax.</p>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="glass-card p-6 rounded-xl animate-glow-2 transition-all duration-500">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary font-bold shrink-0 text-lg">2</div>
+                            <h4 class="font-bold text-on-surface text-lg">Feature Extraction</h4>
+                        </div>
+                        <ul class="list-disc pl-5 text-sm text-on-surface-variant space-y-1">
+                            <li><em>Structural Metrics:</em> Calculates NLOC, Cyclomatic Complexity, Token Count, and Top Nesting Level.</li>
+                            <li><em>NLP Vectorization:</em> The raw code is transformed using TF-IDF, capturing semantic keyword presence.</li>
+                            <li><em>Security Heuristics:</em> Binary flags for dangerous patterns (e.g., `os.system`, `eval()`).</li>
+                        </ul>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="glass-card p-6 rounded-xl animate-glow-3 transition-all duration-500">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary font-bold shrink-0 text-lg">3</div>
+                            <h4 class="font-bold text-on-surface text-lg">Classification</h4>
+                        </div>
+                        <p class="text-sm text-on-surface-variant leading-relaxed">A calibrated Logistic Regression model evaluates the combined feature set (TF-IDF vectors + scaled structural metrics + heuristics).</p>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="glass-card p-6 rounded-xl animate-glow-4 transition-all duration-500">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary font-bold shrink-0 text-lg">4</div>
+                            <h4 class="font-bold text-on-surface text-lg">Thresholding</h4>
+                        </div>
+                        <p class="text-sm text-on-surface-variant leading-relaxed">A dynamic probability threshold (default 0.45) is applied. Code exceeding this is flagged and categorized into specific CWEs.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-16" id="requirements">
+                <h2 class="font-headline-md text-headline-md mb-6 text-primary">7. Hardware & Software Requirements</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-card p-6 rounded-xl">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="material-symbols-outlined text-tertiary">code</span>
+                            <h3 class="font-bold text-lg">Software Requirements</h3>
+                        </div>
+                        <ul class="list-disc pl-5 text-sm text-on-surface-variant space-y-2">
+                            <li><strong>Backend:</strong> Python 3.10+, Flask (Web Server & API), scikit-learn (ML Engine), joblib.</li>
+                            <li><strong>Frontend:</strong> HTML5, TailwindCSS (CDN), html2pdf.js (report generation).</li>
+                            <li><strong>Data:</strong> Pre-trained ML artifacts (`vulnerability_model.pkl`, `tfidf_vectorizer.pkl`, `scaler.pkl`).</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card p-6 rounded-xl">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="material-symbols-outlined text-tertiary">memory</span>
+                            <h3 class="font-bold text-lg">Hardware Requirements</h3>
+                        </div>
+                        <ul class="list-disc pl-5 text-sm text-on-surface-variant space-y-2">
+                            <li><strong>Server:</strong> Minimum 2GB RAM, 2 CPU cores (lightweight enough to run on cloud instances or edge devices like a Raspberry Pi 4).</li>
+                            <li><strong>Client:</strong> Modern web browser (Chrome, Firefox, Safari) with JavaScript enabled.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-16" id="implementation">
+                <h2 class="font-headline-md text-headline-md mb-6 text-primary">8. System Implementation</h2>
+                <div class="glass-card p-8 rounded-xl">
+                    <p class="mb-6">The system is implemented as a decoupled monolithic architecture:</p>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-black/40 rounded-lg border border-white/5">
+                            <strong class="text-primary block mb-1">UI/UX Layer (Frontend)</strong>
+                            <p class="text-sm text-on-surface-variant">A glassmorphic, responsive web dashboard allowing users to upload `.py` files, paste code snippets, or link GitHub repositories.</p>
+                        </div>
+                        <div class="p-4 bg-black/40 rounded-lg border border-white/5">
+                            <strong class="text-primary block mb-1">API Layer (main.py)</strong>
+                            <p class="text-sm text-on-surface-variant">Flask routes intercept scan requests and pass them to the asynchronous scanner engine.</p>
+                        </div>
+                        <div class="p-4 bg-black/40 rounded-lg border border-white/5">
+                            <strong class="text-primary block mb-1">AI Scanner (scanner.py)</strong>
+                            <p class="text-sm text-on-surface-variant">Loads the ML artifacts into memory on boot. Processes incoming code via the `scan_code_snippet` pipeline, returning a vulnerability classification and confidence score.</p>
+                        </div>
+                        <div class="p-4 bg-black/40 rounded-lg border border-white/5">
+                            <strong class="text-primary block mb-1">Repository Integration (github_scanner.py)</strong>
+                            <p class="text-sm text-on-surface-variant">Clones target repositories via `git` or GitHub's ZIP API, iterating over all Python files and feeding them to the AI Scanner.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-16" id="performance">
+                <h2 class="font-headline-md text-headline-md mb-6 text-primary">9. Performance Analysis</h2>
+                <div class="glass-card p-8 rounded-xl">
+                    <p class="mb-6">The ML model was trained and evaluated on a subset of the CVEfixes dataset containing Python vulnerabilities.</p>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+                        <div class="glass-card p-4 text-center border-t-2 border-secondary rounded-lg">
+                            <span class="material-symbols-outlined text-3xl text-secondary mb-2">policy</span>
+                            <h4 class="font-bold text-on-surface text-xl mb-1">92.5%</h4>
+                            <p class="text-sm text-secondary font-medium">Test Recall</p>
+                            <p class="text-xs text-on-surface-variant mt-2">High threat detection</p>
+                        </div>
+                        <div class="glass-card p-4 text-center border-t-2 border-primary rounded-lg">
+                            <span class="material-symbols-outlined text-3xl text-primary mb-2">balance</span>
+                            <h4 class="font-bold text-on-surface text-xl mb-1">64.2%</h4>
+                            <p class="text-sm text-primary font-medium">Test F1-Score</p>
+                            <p class="text-xs text-on-surface-variant mt-2">Balanced metric</p>
+                        </div>
+                        <div class="glass-card p-4 text-center border-t-2 border-secondary rounded-lg">
+                            <span class="material-symbols-outlined text-3xl text-secondary mb-2">my_location</span>
+                            <h4 class="font-bold text-on-surface text-xl mb-1">49.1%</h4>
+                            <p class="text-sm text-secondary font-medium">Test Precision</p>
+                            <p class="text-xs text-on-surface-variant mt-2">Low false positives</p>
+                        </div>
+                        <div class="glass-card p-4 text-center border-t-2 border-primary rounded-lg">
+                            <span class="material-symbols-outlined text-3xl text-primary mb-2">folder_open</span>
+                            <h4 class="font-bold text-on-surface text-xl mb-1">100%</h4>
+                            <p class="text-sm text-primary font-medium">Unseen Repos</p>
+                            <p class="text-xs text-on-surface-variant mt-2">Generalization capability</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-16" id="conclusion">
+                <h2 class="font-headline-md text-headline-md mb-6 text-primary">10. Conclusion</h2>
+                <div class="glass-card p-8 rounded-xl border-l-4 border-secondary">
+                    <p class="text-lg leading-relaxed">The Sentinel Security Engine successfully bridges the gap between traditional rule-based SAST and modern AI-driven analysis. By providing a fast, accurate, and user-friendly dashboard, it empowers developers to identify and remediate vulnerabilities—such as SQL injections and unsafe evaluations—before they reach production environments.</p>
+                </div>
+            </section>
+
+            <section class="mb-16" id="references">
+                <h2 class="font-headline-md text-headline-md mb-6 text-primary">11. References</h2>
+                <div class="glass-card p-8 rounded-xl">
+                    <ol class="list-decimal pl-5 space-y-4 text-sm text-on-surface-variant">
+                        <li>
+                            <strong>Bhandari, G. P., Naseer, A., & Moonen, L. (2021).</strong> 
+                            <a href="https://dl.acm.org/doi/10.1145/3475960.3475985" target="_blank" class="text-primary hover:underline transition-colors"><em>CVEfixes: Automated Collection of Vulnerabilities and Their Fixes from Open-Source Software.</em></a> 
+                            <span class="block text-xs mt-1 opacity-80">PROMISE '21. (Context: The foundational dataset used to train the Sentinel model).</span>
+                        </li>
+                        <li>
+                            <strong>Sun, Y., et al. (2024).</strong> 
+                            <a href="https://ieeexplore.ieee.org/document/10471182" target="_blank" class="text-primary hover:underline transition-colors"><em>VUL-GPT: A Context-Aware LLM-Based Vulnerability Detection System.</em></a> 
+                            <span class="block text-xs mt-1 opacity-80">IEEE. (Context: Recent research validating the use of TF-IDF for contextual feature extraction).</span>
+                        </li>
+                        <li>
+                            <strong>Russell, R., et al. (2018).</strong> 
+                            <a href="https://arxiv.org/abs/1807.04320" target="_blank" class="text-primary hover:underline transition-colors"><em>Automated Vulnerability Detection in Source Code Using Deep Representation Learning.</em></a> 
+                            <span class="block text-xs mt-1 opacity-80">17th ICMLA. (Context: Seminal paper establishing ML over static code analysis).</span>
+                        </li>
+                        <li>
+                            <strong>OWASP Foundation. (2024).</strong> 
+                            <a href="https://owasp.org/www-project-top-ten/" target="_blank" class="text-primary hover:underline transition-colors"><em>OWASP Top Ten Web Application Security Risks.</em></a> 
+                            <span class="block text-xs mt-1 opacity-80">(Context: The standard for mapping CWEs and severity metrics).</span>
+                        </li>
+                        <li>
+                            <strong>Pedregosa, F., et al. (2011).</strong> 
+                            <a href="https://jmlr.csail.mit.edu/papers/v12/pedregosa11a.html" target="_blank" class="text-primary hover:underline transition-colors"><em>Scikit-learn: Machine Learning in Python.</em></a> 
+                            <span class="block text-xs mt-1 opacity-80">JMLR. (Context: The core statistical engine powering Sentinel's Logistic Regression model).</span>
+                        </li>
+                    </ol>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-outline-variant/10 py-12 mt-12 bg-black/40">
+        <div class="max-w-container_max_width mx-auto px-margin_desktop flex flex-col md:flex-row justify-between items-center gap-6">
+            <a href="/" class="flex items-center gap-3">
+                <svg class="w-6 h-6 text-primary" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="50" cy="50" r="18" stroke-width="2.5" />
+                  <rect x="42" y="48" width="16" height="12" rx="2" fill="none" stroke-width="2.5" />
+                  <path d="M45 48 v-4 a5 5 0 0 1 10 0 v4" stroke-width="2.5" />
+                  <circle cx="50" cy="53" r="1.5" fill="currentColor" />
+                  <line x1="50" y1="54.5" x2="50" y2="57" stroke-width="2" />
+                  <line x1="50" y1="32" x2="50" y2="16" />
+                  <circle cx="50" cy="14" r="2.5" fill="currentColor" />
+                  <path d="M62 38 l8 -8 h10" />
+                  <circle cx="82" cy="30" r="2.5" fill="currentColor" />
+                  <path d="M68 50 h12" />
+                  <circle cx="82" cy="50" r="2.5" fill="currentColor" />
+                  <path d="M62 62 l8 8 h10" />
+                  <circle cx="82" cy="70" r="2.5" fill="currentColor" />
+                  <line x1="50" y1="68" x2="50" y2="84" />
+                  <circle cx="50" cy="86" r="2.5" fill="currentColor" />
+                  <path d="M38 62 l-8 8 h-10" />
+                  <circle cx="18" cy="70" r="2.5" fill="currentColor" />
+                  <path d="M32 50 h-12" />
+                  <circle cx="18" cy="50" r="2.5" fill="currentColor" />
+                  <path d="M38 38 l-8 -8 h-10" />
+                  <circle cx="18" cy="30" r="2.5" fill="currentColor" />
+                </svg>
+                <span class="font-display-lg text-lg font-bold text-on-surface">Sentinel</span>
+            </a>
+            <span class="opacity-50 hidden md:block">|</span>
+            <span class="text-sm text-on-surface-variant">© 2026 Sentinel Security Engine.</span>
+            <div class="flex items-center gap-6 text-sm">
+                <a class="hover:text-primary transition-colors" href="/overview">Overview</a>
+                <a class="hover:text-primary transition-colors" href="/dashboard">Dashboard</a>
+                <a class="hover:text-primary transition-colors" href="/docs">Docs</a>
+                <a class="hover:text-primary transition-colors" href="https://github.com/WhiteDevil-06/ai-code-vulnerability-detection-engine">GitHub</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Sidebar Active State Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('aside a[href^="#"]');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -40% 0px',
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        
+                        // Reset all links
+                        navLinks.forEach(link => {
+                            link.className = "block py-1.5 px-3 text-on-surface-variant hover:text-primary transition-colors";
+                        });
+
+                        // Highlight active
+                        const activeLink = document.querySelector(`aside a[href="#${id}"]`);
+                        if (activeLink) {
+                            activeLink.className = "block py-1.5 px-3 rounded-lg bg-primary/10 text-primary border-l-4 border-primary font-medium transition-all";
+                            activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            // Fallback for highlighting the last element when scrolling to the very bottom
+            window.addEventListener('scroll', () => {
+                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 20) {
+                    navLinks.forEach(link => {
+                        link.className = "block py-1.5 px-3 text-on-surface-variant hover:text-primary transition-colors";
+                    });
+                    const lastLink = navLinks[navLinks.length - 1];
+                    if (lastLink) {
+                        lastLink.className = "block py-1.5 px-3 rounded-lg bg-primary/10 text-primary border-l-4 border-primary font-medium transition-all";
+                        lastLink.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                }
+            });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -41,6 +41,10 @@ def login():
 def dashboard():
     return render_template('dashboard.html')
 
+@app.route('/overview')
+def overview():
+    return render_template('overview.html')
+
 @app.route('/docs')
 def docs():
     return render_template('docs.html')
