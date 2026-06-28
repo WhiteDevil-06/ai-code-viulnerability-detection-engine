@@ -4,7 +4,9 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Sentinel Security Dashboard</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none' stroke='%23d0bcff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='18' stroke-width='2' /%3E%3Crect x='42' y='48' width='16' height='12' rx='2' fill='none' stroke-width='2' /%3E%3Cpath d='M45 48 v-4 a5 5 0 0 1 10 0 v4' stroke-width='2' /%3E%3Ccircle cx='50' cy='53' r='1.5' fill='%23d0bcff' /%3E%3Cline x1='50' y1='54.5' x2='50' y2='57' stroke-width='1.5' /%3E%3Cline x1='50' y1='32' x2='50' y2='16' /%3E%3Ccircle cx='50' cy='14' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M62 38 l8 -8 h10' /%3E%3Ccircle cx='82' cy='30' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M68 50 h12' /%3E%3Ccircle cx='82' cy='50' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M62 62 l8 8 h10' /%3E%3Ccircle cx='82' cy='70' r='2.5' fill='%23d0bcff' /%3E%3Cline x1='50' y1='68' x2='50' y2='84' /%3E%3Ccircle cx='50' cy='86' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M38 62 l-8 8 h-10' /%3E%3Ccircle cx='18' cy='70' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M32 50 h-12' /%3E%3Ccircle cx='18' cy='50' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M38 38 l-8 -8 h-10' /%3E%3Ccircle cx='18' cy='30' r='2.5' fill='%23d0bcff' /%3E%3C/svg%3E">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Geist:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
     <style>
@@ -121,73 +123,46 @@
     </script>
 </head>
 <body class="font-body-base text-on-surface selection:bg-primary/30">
-<!-- SideNavBar -->
-<aside class="fixed left-0 top-0 flex flex-col justify-between py-8 px-4 bg-surface-container-low/90 backdrop-blur-xl h-[calc(100vh-32px)] w-64 m-4 rounded-xl border-r border-white/10 shadow-xl z-40">
-<div class="space-y-8">
-<div class="px-4">
-<h1 class="font-display-lg text-primary text-xl font-bold tracking-tight">Sentinel Console</h1>
-<p class="text-[11px] font-mono-label text-outline uppercase tracking-widest mt-1 opacity-70">Enterprise Security</p>
-</div>
-<nav class="space-y-1">
-<a class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary border-l-4 border-primary rounded-r-lg font-medium transition-transform hover:translate-x-1" href="/dashboard">
-<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
-<span class="text-body-base">Dashboard</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 transition-all duration-200 hover:translate-x-1" href="#">
-<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
-<span class="text-body-base">Reports</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 transition-all duration-200 hover:translate-x-1" href="#">
-<span class="material-symbols-outlined" data-icon="settings">settings</span>
-<span class="text-body-base">Settings</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 transition-all duration-200 hover:translate-x-1" href="/docs">
-<span class="material-symbols-outlined" data-icon="description">description</span>
-<span class="text-body-base">Docs</span>
-</a>
-</nav>
-</div>
-<div class="px-4 space-y-6">
-<button class="w-full py-3 px-4 bg-primary text-on-primary font-semibold rounded-lg shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity">
-                Upgrade Plan
-            </button>
-<div class="flex items-center gap-3 pt-6 border-t border-white/10">
-<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden border border-outline-variant">
-<img alt="Developer Profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlztR1ARra1H-tB4UetaGvxRFLyUg-CDcR8UCpuZ8hFkEuVaV3R2xNFXIZO2Vu4qbZUsqhF-s0LSYnRnsygM4Ib9oiwu7AfD7DBqmR5JyiXzEyuDNEKc5NTKtiNVh33F3CqSJJhiiX4WqT34185TiRqmiVJgdkuHUiuO_5qwb0MD7YO0VMCmOnJXaw0mq08riMy-KC0tsYxDPfEWCb8e2jQ_PsYW-dmTNIZAsn0dnMdkLMvAu9J7U4nGJ16zHe6BXZ-HQcvZ9EGKA"/>
-</div>
-<div class="flex-1 min-w-0">
-<p class="text-sm font-semibold truncate">Alex Chen</p>
-<a class="flex items-center gap-1 text-[11px] text-on-surface-variant hover:text-primary" href="#">
-<span class="material-symbols-outlined text-sm" data-icon="logout">logout</span>
-                        Sign Out
-                    </a>
-</div>
-</div>
-</div>
-</aside>
-
+<!-- Notification Container -->
+<div id="notification-container" class="fixed top-24 right-6 z-[100] flex flex-col gap-3 max-w-sm w-full pointer-events-none"></div>
 <!-- Main Content Area -->
-<main class="ml-72 mr-margin_desktop pt-24 pb-margin_desktop min-h-screen">
+<main class="pt-32 pb-margin_desktop min-h-screen max-w-container_max_width mx-auto px-margin_desktop">
 <!-- TopAppBar -->
-<header class="fixed top-0 left-72 right-0 z-30 flex justify-between items-center px-6 py-3 bg-surface-container-lowest/80 backdrop-blur-md rounded-full mt-4 mx-margin_desktop border border-outline-variant/20 shadow-2xl">
-<div class="flex items-center gap-6">
+<header class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-6 py-3 bg-surface-container-lowest/80 backdrop-blur-md border border-outline-variant/20 rounded-full mt-4 mx-auto w-[95%] max-w-container_max_width shadow-2xl">
+<a href="/" class="flex items-center gap-3 hover:opacity-90 transition-opacity">
+<svg class="w-7 h-7 text-primary" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="50" cy="50" r="18" stroke-width="2.5" />
+  <rect x="42" y="48" width="16" height="12" rx="2" fill="none" stroke-width="2.5" />
+  <path d="M45 48 v-4 a5 5 0 0 1 10 0 v4" stroke-width="2.5" />
+  <circle cx="50" cy="53" r="1.5" fill="currentColor" />
+  <line x1="50" y1="54.5" x2="50" y2="57" stroke-width="2" />
+  <line x1="50" y1="32" x2="50" y2="16" />
+  <circle cx="50" cy="14" r="2.5" fill="currentColor" />
+  <path d="M62 38 l8 -8 h10" />
+  <circle cx="82" cy="30" r="2.5" fill="currentColor" />
+  <path d="M68 50 h12" />
+  <circle cx="82" cy="50" r="2.5" fill="currentColor" />
+  <path d="M62 62 l8 8 h10" />
+  <circle cx="82" cy="70" r="2.5" fill="currentColor" />
+  <line x1="50" y1="68" x2="50" y2="84" />
+  <circle cx="50" cy="86" r="2.5" fill="currentColor" />
+  <path d="M38 62 l-8 8 h-10" />
+  <circle cx="18" cy="70" r="2.5" fill="currentColor" />
+  <path d="M32 50 h-12" />
+  <circle cx="18" cy="50" r="2.5" fill="currentColor" />
+  <path d="M38 38 l-8 -8 h-10" />
+  <circle cx="18" cy="30" r="2.5" fill="currentColor" />
+</svg>
 <span class="font-display-lg text-headline-md font-bold tracking-tight text-primary">Sentinel</span>
+</a>
+<nav class="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-8">
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-display-lg text-body-base" href="/">Home</a>
+<a class="text-primary font-semibold border-b-2 border-primary pb-1 font-display-lg text-body-base" href="/dashboard">Dashboard</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-display-lg text-body-base" href="/docs">Docs</a>
+</nav>
 <div id="engine-status-badge" class="hidden items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 w-fit">
 <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
 <span class="font-mono-label text-secondary text-mono-label">🛡️ Sentinel Engine: Online</span>
-</div>
-<nav class="hidden md:flex items-center gap-4 text-body-sm">
-<a class="text-on-surface-variant hover:text-on-surface transition-colors" href="/">Home</a>
-<a class="text-primary font-semibold border-b-2 border-primary pb-1" href="/dashboard">Dashboard</a>
-<a class="text-on-surface-variant hover:text-on-surface transition-colors" href="/docs">Docs</a>
-</nav>
-</div>
-<div class="flex items-center gap-3">
-<button class="px-4 py-2 text-on-surface-variant hover:bg-surface-variant/30 rounded-full transition-all text-body-sm font-medium">API Access</button>
-<a href="/dashboard" class="px-6 py-2 bg-primary text-on-primary font-bold rounded-full scale-95 active:scale-90 transition-transform text-center inline-block">Start Scan</a>
-<div class="h-6 w-[1px] bg-outline-variant/30 mx-2"></div>
-<button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant/30 rounded-full" data-icon="notifications">notifications</button>
-<button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant/30 rounded-full" data-icon="account_circle">account_circle</button>
 </div>
 </header>
 
@@ -198,6 +173,7 @@
     <div class="flex border-b border-white/10 mb-4 gap-6">
         <button id="tab-repo-btn" class="pb-2 border-b-2 border-primary text-primary font-semibold text-sm transition-all focus:outline-none">Repository Scan</button>
         <button id="tab-code-btn" class="pb-2 text-on-surface-variant hover:text-on-surface font-semibold text-sm transition-all focus:outline-none">Code Snippet Scan</button>
+        <button id="tab-file-btn" class="pb-2 text-on-surface-variant hover:text-on-surface font-semibold text-sm transition-all focus:outline-none">File Upload Scan</button>
     </div>
     
     <!-- Repository Scan Tab Content -->
@@ -224,6 +200,27 @@
         <button id="run-code-btn" class="self-end bg-primary text-on-primary px-8 py-3 rounded-lg font-bold flex items-center gap-2 hover:brightness-110 transition-all">
             <span class="material-symbols-outlined" data-icon="search">search</span>
             Scan Snippet
+        </button>
+    </div>
+
+    <!-- File Upload Scan Tab Content -->
+    <div id="tab-file-content" class="hidden flex-col gap-4">
+        <div class="space-y-2 w-full">
+            <label class="text-mono-label text-outline uppercase text-[10px] tracking-wider">Upload Python File (.py)</label>
+            <div class="flex items-center justify-center w-full">
+                <label for="file-upload-input" class="flex flex-col items-center justify-center w-full h-36 border-2 border-outline-variant/30 border-dashed rounded-lg cursor-pointer bg-black/40 hover:bg-white/5 transition-all">
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6 text-center px-4">
+                        <span class="material-symbols-outlined text-outline text-3xl mb-2" data-icon="upload_file">upload_file</span>
+                        <p class="mb-1 text-sm text-on-surface-variant"><span class="font-semibold text-primary">Click to upload</span> or drag and drop</p>
+                        <p id="file-upload-name" class="text-xs text-outline font-mono opacity-80">Only Python files (.py) are supported</p>
+                    </div>
+                    <input id="file-upload-input" type="file" accept=".py" class="hidden"/>
+                </label>
+            </div>
+        </div>
+        <button id="run-file-btn" class="self-end bg-primary text-on-primary px-8 py-3 rounded-lg font-bold flex items-center gap-2 hover:brightness-110 transition-all">
+            <span class="material-symbols-outlined" data-icon="upload">upload</span>
+            Scan File
         </button>
     </div>
 </section>
@@ -329,6 +326,11 @@
         <div id="scan-progress-bar" class="h-full bg-primary transition-all duration-300 w-0"></div>
     </div>
 </div>
+<!-- PDF Export Button -->
+<button id="export-pdf-btn" class="hidden mt-6 w-full bg-primary/20 text-primary border border-primary/30 hover:bg-primary hover:text-on-primary px-4 py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all duration-300">
+    <span class="material-symbols-outlined text-sm">picture_as_pdf</span>
+    Export PDF Report
+</button>
 </section>
 
 <!-- Analytics Summary -->
@@ -365,12 +367,35 @@
 </main>
 
 <!-- Footer -->
-<footer class="ml-72 mr-margin_desktop border-t border-outline-variant/10 py-12 px-margin_desktop flex flex-col md:flex-row justify-between items-center gap-gutter text-body-sm text-on-surface-variant">
-<div class="flex items-center gap-2">
+<footer class="border-t border-outline-variant/10 py-12 px-margin_desktop flex flex-col md:flex-row justify-between items-center gap-gutter text-body-sm text-on-surface-variant w-full bg-surface-container-lowest rounded-t-xl max-w-container_max_width mx-auto">
+<a href="/" class="flex items-center gap-2 hover:opacity-90 transition-opacity">
+<svg class="w-5 h-5 text-on-surface" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="50" cy="50" r="18" stroke-width="2.5" />
+  <rect x="42" y="48" width="16" height="12" rx="2" fill="none" stroke-width="2.5" />
+  <path d="M45 48 v-4 a5 5 0 0 1 10 0 v4" stroke-width="2.5" />
+  <circle cx="50" cy="53" r="1.5" fill="currentColor" />
+  <line x1="50" y1="54.5" x2="50" y2="57" stroke-width="2" />
+  <line x1="50" y1="32" x2="50" y2="16" />
+  <circle cx="50" cy="14" r="2.5" fill="currentColor" />
+  <path d="M62 38 l8 -8 h10" />
+  <circle cx="82" cy="30" r="2.5" fill="currentColor" />
+  <path d="M68 50 h12" />
+  <circle cx="82" cy="50" r="2.5" fill="currentColor" />
+  <path d="M62 62 l8 8 h10" />
+  <circle cx="82" cy="70" r="2.5" fill="currentColor" />
+  <line x1="50" y1="68" x2="50" y2="84" />
+  <circle cx="50" cy="86" r="2.5" fill="currentColor" />
+  <path d="M38 62 l-8 8 h-10" />
+  <circle cx="18" cy="70" r="2.5" fill="currentColor" />
+  <path d="M32 50 h-12" />
+  <circle cx="18" cy="50" r="2.5" fill="currentColor" />
+  <path d="M38 38 l-8 -8 h-10" />
+  <circle cx="18" cy="30" r="2.5" fill="currentColor" />
+</svg>
 <span class="font-display-lg text-lg font-bold text-on-surface">Sentinel</span>
+</a>
 <span class="opacity-50">|</span>
-<span>© 2026 Sentinel Academic Evaluation Project.</span>
-</div>
+<span>© 2026 Sentinel Security Engine.</span>
 <div class="flex items-center gap-6">
 <a class="hover:text-primary transition-colors" href="/docs">Docs</a>
 <a class="hover:text-primary transition-colors" href="/dashboard">Dashboard</a>
@@ -379,6 +404,67 @@
 </footer>
 
 <script>
+// Custom Premium Notification System
+function showNotification(message, type = 'error') {
+    const container = document.getElementById('notification-container');
+    if (!container) return;
+
+    const notification = document.createElement('div');
+    notification.className = `custom-notification pointer-events-auto flex items-start gap-3 p-4 bg-surface-container-high/90 backdrop-blur-md rounded-xl border border-white/10 shadow-2xl transition-all duration-300 translate-x-full opacity-0 max-w-sm w-full border-l-4 ${
+        type === 'error' ? 'border-error' : 'border-secondary'
+    }`;
+    
+    const icon = type === 'error' ? 'warning' : 'check_circle';
+    const iconColor = type === 'error' ? 'text-error' : 'text-secondary';
+
+    notification.innerHTML = `
+        <div class="p-1 rounded bg-white/5 flex items-center justify-center">
+            <span class="material-symbols-outlined text-sm ${iconColor}">${icon}</span>
+        </div>
+        <div class="flex-1 text-sm font-medium text-on-surface pr-4">${message}</div>
+        <button class="material-symbols-outlined text-sm text-outline hover:text-on-surface transition-colors focus:outline-none" onclick="this.parentElement.dismiss()">close</button>
+    `;
+
+    container.appendChild(notification);
+
+    // Trigger animate-in
+    setTimeout(() => {
+        notification.classList.remove('translate-x-full', 'opacity-0');
+    }, 10);
+
+    // Auto dismiss after 5 seconds
+    const autoDismissTimeout = setTimeout(() => {
+        dismissNotification(notification);
+    }, 5000);
+
+    function dismissNotification(el) {
+        el.classList.add('translate-x-full', 'opacity-0');
+        setTimeout(() => {
+            el.remove();
+        }, 300);
+    }
+
+    // Attach dismiss handler
+    notification.dismiss = () => {
+        clearTimeout(autoDismissTimeout);
+        dismissNotification(notification);
+    };
+}
+
+// Global Keydown Listener for Escape key to close notifications
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const notifications = document.querySelectorAll('.custom-notification');
+        notifications.forEach(n => {
+            if (typeof n.dismiss === 'function') {
+                n.dismiss();
+            } else {
+                n.remove();
+            }
+        });
+    }
+});
+
 document.addEventListener("DOMContentLoaded", () => {
     let activeVulnerabilities = [];
 
@@ -397,25 +483,43 @@ document.addEventListener("DOMContentLoaded", () => {
     // 2. Tab Navigation
     const tabRepoBtn = document.getElementById('tab-repo-btn');
     const tabCodeBtn = document.getElementById('tab-code-btn');
+    const tabFileBtn = document.getElementById('tab-file-btn');
     const tabRepoContent = document.getElementById('tab-repo-content');
     const tabCodeContent = document.getElementById('tab-code-content');
+    const tabFileContent = document.getElementById('tab-file-content');
 
-    tabRepoBtn.addEventListener('click', () => {
-        tabRepoBtn.className = "pb-2 border-b-2 border-primary text-primary font-semibold text-sm transition-all focus:outline-none";
+    function deactivateAllTabs() {
+        tabRepoBtn.className = "pb-2 text-on-surface-variant hover:text-on-surface font-semibold text-sm transition-all focus:outline-none";
         tabCodeBtn.className = "pb-2 text-on-surface-variant hover:text-on-surface font-semibold text-sm transition-all focus:outline-none";
-        tabRepoContent.classList.remove('hidden');
-        tabRepoContent.classList.add('flex');
+        tabFileBtn.className = "pb-2 text-on-surface-variant hover:text-on-surface font-semibold text-sm transition-all focus:outline-none";
+        
+        tabRepoContent.classList.add('hidden');
+        tabRepoContent.classList.remove('flex');
         tabCodeContent.classList.add('hidden');
         tabCodeContent.classList.remove('flex');
+        tabFileContent.classList.add('hidden');
+        tabFileContent.classList.remove('flex');
+    }
+
+    tabRepoBtn.addEventListener('click', () => {
+        deactivateAllTabs();
+        tabRepoBtn.className = "pb-2 border-b-2 border-primary text-primary font-semibold text-sm transition-all focus:outline-none";
+        tabRepoContent.classList.remove('hidden');
+        tabRepoContent.classList.add('flex');
     });
 
     tabCodeBtn.addEventListener('click', () => {
+        deactivateAllTabs();
         tabCodeBtn.className = "pb-2 border-b-2 border-primary text-primary font-semibold text-sm transition-all focus:outline-none";
-        tabRepoBtn.className = "pb-2 text-on-surface-variant hover:text-on-surface font-semibold text-sm transition-all focus:outline-none";
         tabCodeContent.classList.remove('hidden');
         tabCodeContent.classList.add('flex');
-        tabRepoContent.classList.add('hidden');
-        tabRepoContent.classList.remove('flex');
+    });
+
+    tabFileBtn.addEventListener('click', () => {
+        deactivateAllTabs();
+        tabFileBtn.className = "pb-2 border-b-2 border-primary text-primary font-semibold text-sm transition-all focus:outline-none";
+        tabFileContent.classList.remove('hidden');
+        tabFileContent.classList.add('flex');
     });
 
     // 3. Render Code with Syntax Highlight and Line Highlights
@@ -431,16 +535,29 @@ document.addEventListener("DOMContentLoaded", () => {
     function checkIsVulnerableLine(line, vulnType) {
         const l = line.toLowerCase();
         if (vulnType === "SQL Injection") {
-            return l.includes(".execute(") && (l.includes("f'") || l.includes('f"') || l.includes("%") || l.includes(".format("));
+            const hasExecute = l.includes(".execute(");
+            const hasFormatting = l.includes("f'") || l.includes('f"') || l.includes("%") || l.includes(".format(") || l.includes("+") || l.includes("&#039;");
+            const hasSqlKeywords = l.includes("select") || l.includes("insert") || l.includes("update") || l.includes("delete");
+            
+            if (hasExecute && hasFormatting) return true;
+            if (hasSqlKeywords && hasFormatting) return true;
+            if (hasExecute && (l.includes("sql") || l.includes("query") || l.includes("stmt"))) return true;
+            return false;
         }
         if (vulnType === "Command Injection") {
-            return l.includes("os.system") || l.includes("os.popen") || l.includes("subprocess.run") || l.includes("subprocess.popen") || l.includes("subprocess.call");
+            const hasSystem = l.includes("os.system") || l.includes("os.popen") || l.includes("subprocess.run") || l.includes("subprocess.popen") || l.includes("subprocess.call");
+            const hasFormatting = l.includes("f'") || l.includes('f"') || l.includes("%") || l.includes(".format(") || l.includes("+");
+            const hasCmdKeywords = l.includes("cmd") || l.includes("command") || l.includes("sh") || l.includes("bash");
+            
+            if (hasSystem) return true;
+            if (hasCmdKeywords && hasFormatting) return true;
+            return false;
         }
         if (vulnType === "Unsafe eval() usage") {
             return l.includes("eval(") || l.includes("exec(");
         }
         if (vulnType === "Cross-Site Scripting (XSS)") {
-            return l.includes("render_template_string") || l.includes("markup(");
+            return l.includes("render_template_string") || l.includes("markup(") || l.includes("safe");
         }
         return false;
     }
@@ -665,7 +782,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     runBtn.addEventListener('click', () => {
         const url = repoInput.value.trim();
-        if (!url) return alert("Please enter a repository URL.");
+        if (!url) return showNotification("Please enter a repository URL.");
+        
+        document.getElementById('export-pdf-btn').classList.add('hidden');
         
         runBtn.disabled = true;
         runBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">sync</span> Scanning...';
@@ -736,9 +855,10 @@ document.addEventListener("DOMContentLoaded", () => {
             pct.textContent = '100%';
 
             if (data.error) {
-                alert("Error: " + data.error);
+                showNotification("Error: " + data.error);
                 document.getElementById('stat-analysis-title').textContent = "Scan Failed";
                 progressContainer.classList.add('hidden');
+                document.getElementById('export-pdf-btn').classList.add('hidden');
                 return;
             }
 
@@ -747,6 +867,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             renderVulnerabilitiesTable(activeVulnerabilities);
             updateStatsDashboard(activeVulnerabilities, data.files_scanned, elapsedSeconds);
+            document.getElementById('export-pdf-btn').classList.remove('hidden');
             
             if (activeVulnerabilities.length > 0) {
                 displayCode(activeVulnerabilities[0].file, activeVulnerabilities[0].code, activeVulnerabilities[0].vulnerability);
@@ -762,9 +883,152 @@ document.addEventListener("DOMContentLoaded", () => {
             runBtn.innerHTML = '<span class="material-symbols-outlined" data-icon="bolt" data-weight="fill">bolt</span> Run Analysis';
             clearInterval(progressInterval);
             progressContainer.classList.add('hidden');
+            document.getElementById('export-pdf-btn').classList.add('hidden');
             console.error("Scan error:", err);
-            alert("An error occurred during repository scanning.");
+            showNotification("An error occurred during repository scanning.");
         });
+    });
+
+    // 6.5 Action 3: File Upload Scanner
+    const fileInput = document.getElementById('file-upload-input');
+    const fileNameDisplay = document.getElementById('file-upload-name');
+    const runFileBtn = document.getElementById('run-file-btn');
+
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files && fileInput.files.length > 0) {
+            fileNameDisplay.textContent = `Selected: ${fileInput.files[0].name}`;
+            fileNameDisplay.className = "text-xs text-primary font-mono font-semibold";
+        } else {
+            fileNameDisplay.textContent = "Only Python files (.py) are supported";
+            fileNameDisplay.className = "text-xs text-outline font-mono opacity-80";
+        }
+    });
+
+    runFileBtn.addEventListener('click', () => {
+        if (!fileInput.files || fileInput.files.length === 0) {
+            return showNotification("Please select a Python file to scan first.");
+        }
+        
+        const file = fileInput.files[0];
+        if (!file.name.endsWith('.py')) {
+            return showNotification("Only Python (.py) files are supported.");
+        }
+
+        document.getElementById('export-pdf-btn').classList.add('hidden');
+
+        runFileBtn.disabled = true;
+        runFileBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">sync</span> Scanning...';
+
+        document.getElementById('stat-analysis-title').textContent = "Scanning File";
+        document.getElementById('stat-analysis-subtitle').textContent = "Uploading file...";
+
+        // Progress Bar Simulation elements
+        const progressContainer = document.getElementById('scan-progress-container');
+        const progressBar = document.getElementById('scan-progress-bar');
+        const progressLabel = document.getElementById('scan-progress-label');
+        const progressPct = document.getElementById('scan-progress-percentage');
+
+        progressContainer.classList.remove('hidden');
+        progressBar.style.width = '0%';
+        progressPct.textContent = '0%';
+        progressLabel.textContent = 'Uploading File...';
+
+        let progress = 0;
+        let progressInterval = setInterval(() => {
+            if (progress < 40) {
+                progress += Math.random() * 8;
+                if (progress > 40) progress = 40;
+                progressLabel.textContent = 'Parsing syntax...';
+            } else if (progress < 85) {
+                progress += Math.random() * 4;
+                if (progress > 85) progress = 85;
+                progressLabel.textContent = 'AI Model Analysis...';
+            }
+            
+            const roundedProgress = Math.round(progress);
+            progressBar.style.width = `${roundedProgress}%`;
+            progressPct.textContent = `${roundedProgress}%`;
+            
+            // Also update the circular ring
+            const ring = document.getElementById('stat-progress-ring');
+            const pct = document.getElementById('stat-progress-pct');
+            const dashOffset = 175 - (175 * roundedProgress / 100);
+            ring.setAttribute('stroke-dashoffset', dashOffset);
+            pct.textContent = `${roundedProgress}%`;
+        }, 120);
+
+        const start = performance.now();
+        const formData = new FormData();
+        formData.append('file', file);
+
+        // Read the file locally to load into viewer afterwards
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const fileContent = e.target.result;
+            
+            fetch('/api/scan/file', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                runFileBtn.disabled = false;
+                runFileBtn.innerHTML = '<span class="material-symbols-outlined" data-icon="upload">upload</span> Scan File';
+                
+                clearInterval(progressInterval);
+                progressBar.style.width = '100%';
+                progressPct.textContent = '100%';
+                progressLabel.textContent = 'Analysis Complete!';
+                
+                // Update circular progress to 100%
+                const ring = document.getElementById('stat-progress-ring');
+                const pct = document.getElementById('stat-progress-pct');
+                ring.setAttribute('stroke-dashoffset', '0');
+                pct.textContent = '100%';
+
+                if (data.error) {
+                    showNotification("Error: " + data.error);
+                    document.getElementById('stat-analysis-title').textContent = "Scan Failed";
+                    progressContainer.classList.add('hidden');
+                    document.getElementById('export-pdf-btn').classList.add('hidden');
+                    return;
+                }
+
+                const elapsedSeconds = (performance.now() - start) / 1000;
+                const responseVulns = data.vulnerabilities || [];
+                
+                activeVulnerabilities = responseVulns.map(v => ({
+                    file: v.file,
+                    vulnerability: v.vulnerability,
+                    confidence: v.confidence,
+                    code: fileContent
+                }));
+
+                if (activeVulnerabilities.length === 0) {
+                    activeVulnerabilities = [{
+                        file: file.name,
+                        vulnerability: "Safe Code",
+                        confidence: 1.0,
+                        code: fileContent
+                    }];
+                }
+
+                renderVulnerabilitiesTable(activeVulnerabilities.filter(v => v.vulnerability !== "Safe Code"));
+                updateStatsDashboard(activeVulnerabilities, 1, elapsedSeconds);
+                displayCode(activeVulnerabilities[0].file, activeVulnerabilities[0].code, activeVulnerabilities[0].vulnerability);
+                document.getElementById('export-pdf-btn').classList.remove('hidden');
+            })
+            .catch(err => {
+                runFileBtn.disabled = false;
+                runFileBtn.innerHTML = '<span class="material-symbols-outlined" data-icon="upload">upload</span> Scan File';
+                clearInterval(progressInterval);
+                progressContainer.classList.add('hidden');
+                document.getElementById('export-pdf-btn').classList.add('hidden');
+                console.error("File scan error:", err);
+                showNotification("An error occurred during file scanning.");
+            });
+        };
+        reader.readAsText(file);
     });
 
     // 7. Action 2: Code Snippet Scanner
@@ -773,7 +1037,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     runCodeBtn.addEventListener('click', () => {
         const codeText = codeSnippetInput.value.trim();
-        if (!codeText) return alert("Please paste a Python code snippet to scan.");
+        if (!codeText) return showNotification("Please paste a Python code snippet to scan.");
+
+        document.getElementById('export-pdf-btn').classList.add('hidden');
 
         runCodeBtn.disabled = true;
         runCodeBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">sync</span> Scanning...';
@@ -794,8 +1060,9 @@ document.addEventListener("DOMContentLoaded", () => {
             runCodeBtn.innerHTML = '<span class="material-symbols-outlined">search</span> Scan Snippet';
 
             if (data.error) {
-                alert("Error: " + data.error);
+                showNotification("Error: " + data.error);
                 document.getElementById('stat-analysis-title').textContent = "Scan Failed";
+                document.getElementById('export-pdf-btn').classList.add('hidden');
                 return;
             }
 
@@ -821,15 +1088,288 @@ document.addEventListener("DOMContentLoaded", () => {
             renderVulnerabilitiesTable(activeVulnerabilities.filter(v => v.vulnerability !== "Safe Code"));
             updateStatsDashboard(activeVulnerabilities, 1, elapsedSeconds);
             displayCode(activeVulnerabilities[0].file, activeVulnerabilities[0].code, activeVulnerabilities[0].vulnerability);
+            document.getElementById('export-pdf-btn').classList.remove('hidden');
         })
         .catch(err => {
             runCodeBtn.disabled = false;
             runCodeBtn.innerHTML = '<span class="material-symbols-outlined">search</span> Scan Snippet';
+            document.getElementById('export-pdf-btn').classList.add('hidden');
             console.error("Snippet scan error:", err);
-            alert("An error occurred during snippet scanning.");
+            showNotification("An error occurred during snippet scanning.");
         });
     });
-});
+
+    // 8. PDF Export Action
+    const exportPdfBtn = document.getElementById('export-pdf-btn');
+    exportPdfBtn.addEventListener('click', () => {
+        function exportPDF() {
+            // Gather scan details
+            let target = 'Pasted Code Snippet';
+            const activeTab = document.querySelector('.border-b-2.border-primary');
+            if (activeTab) {
+                if (activeTab.id === 'tab-repo-btn') {
+                    target = document.getElementById('repo-url-input').value.trim() || 'GitHub Repository';
+                } else if (activeTab.id === 'tab-file-btn') {
+                    const fileNameElem = document.getElementById('file-upload-name');
+                    target = (fileNameElem && fileNameElem.textContent.startsWith('Selected:')) ? fileNameElem.textContent.replace('Selected:', '').trim() : 'Uploaded Python File';
+                }
+            }
+
+            const scanTime = new Date().toLocaleString();
+            const filesScanned = document.getElementById('stat-files-scanned').textContent;
+            const engineSpeed = document.getElementById('stat-engine-speed').textContent;
+            const elapsedTime = document.getElementById('stat-elapsed-time').textContent;
+
+            const realVulns = activeVulnerabilities.filter(v => v.vulnerability !== 'Safe Code');
+            const totalVulns = realVulns.length;
+
+            // Build the PDF layout DOM in memory (nested inside an offscreen fixed wrapper to avoid 0-height rendering bug)
+            const wrapper = document.createElement('div');
+            wrapper.style.position = 'fixed';
+            wrapper.style.left = '0';
+            wrapper.style.top = '0';
+            wrapper.style.width = '680px';
+            wrapper.style.height = '0';
+            wrapper.style.overflow = 'hidden';
+            wrapper.style.zIndex = '-9999';
+
+            const element = document.createElement('div');
+            element.style.width = '680px';
+            element.style.padding = '24px';
+            element.style.fontFamily = 'system-ui, -apple-system, Arial, sans-serif';
+            element.style.color = '#1f2937';
+            element.style.backgroundColor = '#ffffff';
+
+            // Helper: escape HTML for safe rendering inside PDF
+            function pdfEscapeHtml(text) {
+                return (text || '').toString()
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
+            // Helper: check if a line is vulnerable (mirrors checkIsVulnerableLine)
+            function pdfIsVulnLine(line, vulnType) {
+                const l = line.toLowerCase();
+                if (vulnType === 'SQL Injection') {
+                    const hasExecute = l.includes('.execute(');
+                    const hasFormatting = l.includes("f'") || l.includes('f"') || l.includes('%') || l.includes('.format(') || l.includes('+') || l.includes("'");
+                    const hasSqlKeywords = l.includes('select') || l.includes('insert') || l.includes('update') || l.includes('delete');
+                    if (hasExecute && hasFormatting) return true;
+                    if (hasSqlKeywords && hasFormatting) return true;
+                    if (hasExecute && (l.includes('sql') || l.includes('query') || l.includes('stmt'))) return true;
+                    return false;
+                }
+                if (vulnType === 'Command Injection') {
+                    const hasSystem = l.includes('os.system') || l.includes('os.popen') || l.includes('subprocess.run') || l.includes('subprocess.popen') || l.includes('subprocess.call');
+                    const hasFormatting = l.includes("f'") || l.includes('f"') || l.includes('%') || l.includes('.format(') || l.includes('+');
+                    const hasCmdKeywords = l.includes('cmd') || l.includes('command') || l.includes('sh') || l.includes('bash');
+                    if (hasSystem) return true;
+                    if (hasCmdKeywords && hasFormatting) return true;
+                    return false;
+                }
+                if (vulnType === 'Unsafe eval() usage') return l.includes('eval(') || l.includes('exec(');
+                if (vulnType === 'Cross-Site Scripting (XSS)') return l.includes('render_template_string') || l.includes('markup(') || l.includes('safe');
+                return false;
+            }
+
+            // Helper: render code block HTML with red-highlighted vulnerable lines
+            function buildCodeBlockHtml(codeText, vulnType) {
+                const lines = (codeText || '').split('\n');
+                let rowsHtml = '';
+                lines.forEach((line, i) => {
+                    const isVuln = pdfIsVulnLine(line, vulnType);
+                    const safeLine = pdfEscapeHtml(line) || '&nbsp;';
+                    const rowBg = isVuln ? 'background-color: rgba(239, 68, 68, 0.12);' : '';
+                    const numColor = isVuln ? 'color: #ef4444;' : 'color: #6b7280;';
+                    const borderLeft = isVuln ? 'border-left: 3px solid #ef4444; padding-left: 8px;' : 'border-left: 3px solid transparent; padding-left: 8px;';
+                    const codeColor = isVuln ? 'color: #fca5a5;' : 'color: #d1d5db;';
+                    rowsHtml += `<tr style="${rowBg}">
+                            <td style="padding: 2px 10px 2px 0; text-align: right; min-width: 28px; font-size: 11px; font-family: monospace; ${numColor} vertical-align: top;">${i + 1}</td>
+                            <td style="padding: 2px 4px; font-size: 11px; font-family: monospace; white-space: pre; ${codeColor} ${borderLeft}">${safeLine}</td>
+                        </tr>`;
+                });
+                return rowsHtml;
+            }
+
+            // Build code sections for each vulnerability
+            let codeContextHtml = '';
+            if (realVulns.length > 0 && realVulns.some(v => v.code)) {
+                const codeBlocksHtml = realVulns.map((v) => {
+                    if (!v.code) return '';
+                    return `<div style="margin-bottom: 20px; page-break-inside: avoid;">
+                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px;">
+                                <tr>
+                                    <td style="vertical-align: middle;">
+                                        <span style="font-size: 12px; font-weight: 700; color: #ef4444;">${pdfEscapeHtml(v.vulnerability)}</span>
+                                    </td>
+                                    <td style="text-align: right; vertical-align: middle;">
+                                        <span style="font-size: 11px; color: #6b7280; font-family: monospace;">${pdfEscapeHtml(v.file)}</span>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div style="background-color: #0f1117; border-radius: 8px; border: 1px solid #2d3748; overflow: hidden;">
+                                <div style="background-color: #1a1f2e; padding: 7px 14px; font-size: 11px; color: #9ca3af; font-family: monospace; border-bottom: 1px solid #2d3748;">${pdfEscapeHtml(v.file)}</div>
+                                <table style="width: 100%; border-collapse: collapse; padding: 6px 0;">
+                                    ${buildCodeBlockHtml(v.code, v.vulnerability)}
+                                </table>
+                            </div>
+                        </div>`;
+                }).join('');
+
+                codeContextHtml = `<div style="margin-top: 30px;">
+                        <h3 style="font-size: 13px; text-transform: uppercase; color: #6b7280; margin: 0 0 14px 0; font-weight: 700; letter-spacing: 0.05em; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px;">Vulnerable Code Context</h3>
+                        ${codeBlocksHtml}
+                    </div>`;
+            }
+
+            element.innerHTML = `
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 0;">
+                    <tr>
+                        <td style="vertical-align: middle; padding-bottom: 16px;">
+                            <table style="border-collapse: collapse;"><tr>
+                                <td style="vertical-align: middle; padding-right: 8px;">
+                                    <svg width="26" height="26" viewBox="0 0 100 100" fill="none" stroke="#6d3bd7" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                                      <circle cx="50" cy="50" r="18" stroke-width="2.5" stroke="#6d3bd7" />
+                                      <rect x="42" y="48" width="16" height="12" rx="2" fill="none" stroke-width="2.5" stroke="#6d3bd7" />
+                                      <path d="M45 48 v-4 a5 5 0 0 1 10 0 v4" stroke-width="2.5" stroke="#6d3bd7" />
+                                      <circle cx="50" cy="53" r="1.5" fill="#6d3bd7" />
+                                      <line x1="50" y1="54.5" x2="50" y2="57" stroke-width="2" stroke="#6d3bd7" />
+                                      <line x1="50" y1="32" x2="50" y2="16" stroke="#6d3bd7" />
+                                      <circle cx="50" cy="14" r="2.5" fill="#6d3bd7" />
+                                      <path d="M62 38 l8 -8 h10" stroke="#6d3bd7" />
+                                      <circle cx="82" cy="30" r="2.5" fill="#6d3bd7" />
+                                      <path d="M68 50 h12" stroke="#6d3bd7" />
+                                      <circle cx="82" cy="50" r="2.5" fill="#6d3bd7" />
+                                      <path d="M62 62 l8 8 h10" stroke="#6d3bd7" />
+                                      <circle cx="82" cy="70" r="2.5" fill="#6d3bd7" />
+                                      <line x1="50" y1="68" x2="50" y2="84" stroke="#6d3bd7" />
+                                      <circle cx="50" cy="86" r="2.5" fill="#6d3bd7" />
+                                      <path d="M38 62 l-8 8 h-10" stroke="#6d3bd7" />
+                                      <circle cx="18" cy="70" r="2.5" fill="#6d3bd7" />
+                                      <path d="M32 50 h-12" stroke="#6d3bd7" />
+                                      <circle cx="18" cy="50" r="2.5" fill="#6d3bd7" />
+                                      <path d="M38 38 l-8 -8 h-10" stroke="#6d3bd7" />
+                                      <circle cx="18" cy="30" r="2.5" fill="#6d3bd7" />
+                                    </svg>
+                                </td>
+                                <td style="vertical-align: middle;"><span style="font-size: 20px; font-weight: 800; color: #6d3bd7;">Sentinel</span></td>
+                            </tr></table>
+                        </td>
+                        <td style="vertical-align: middle; text-align: right; padding-bottom: 16px;">
+                            <div style="font-size: 15px; font-weight: 700; color: #1f2937;">Security Audit Report</div>
+                            <div style="font-size: 11px; color: #6b7280; margin-top: 3px;">Generated: ${scanTime}</div>
+                        </td>
+                    </tr>
+                    <tr><td colspan="2" style="border-bottom: 2px solid #e5e7eb; padding: 0;"></td></tr>
+                </table>
+
+                <div style="margin-top: 20px; margin-bottom: 20px;">
+                    <h3 style="font-size: 12px; text-transform: uppercase; color: #6b7280; margin: 0 0 10px 0; font-weight: 700; letter-spacing: 0.05em;">Audit Summary</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
+                        <tr>
+                            <td style="width: 50%; padding-right: 8px; vertical-align: top;">
+                                <div style="border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; background-color: #f9fafb;">
+                                    <div style="font-size: 10px; color: #6b7280; margin-bottom: 4px; text-transform: uppercase; font-weight: 700;">Target Scanned</div>
+                                    <div style="font-size: 12px; font-weight: 700; word-break: break-all; color: #1f2937;">${target}</div>
+                                </div>
+                            </td>
+                            <td style="width: 50%; padding-left: 8px; vertical-align: top;">
+                                <div style="border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; background-color: #f9fafb;">
+                                    <div style="font-size: 10px; color: #6b7280; margin-bottom: 4px; text-transform: uppercase; font-weight: 700;">Security Assessment</div>
+                                    <div style="font-size: 12px; font-weight: 700; color: ${totalVulns > 0 ? '#ef4444' : '#10b981'};">
+                                        ${totalVulns > 0 ? `${totalVulns} Vulnerabilit${totalVulns > 1 ? 'ies' : 'y'} Flagged` : '0 Vulnerabilities Detected (Clean Scan)'}
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="width: 33.33%; padding-right: 6px; vertical-align: top;">
+                                <div style="border: 1px solid #e5e7eb; border-radius: 6px; padding: 10px; text-align: center; background-color: #f9fafb;">
+                                    <div style="font-size: 10px; color: #6b7280; margin-bottom: 2px; text-transform: uppercase; font-weight: 700;">Files Scanned</div>
+                                    <div style="font-size: 14px; font-weight: 700; color: #1f2937;">${filesScanned}</div>
+                                </div>
+                            </td>
+                            <td style="width: 33.33%; padding: 0 6px; vertical-align: top;">
+                                <div style="border: 1px solid #e5e7eb; border-radius: 6px; padding: 10px; text-align: center; background-color: #f9fafb;">
+                                    <div style="font-size: 10px; color: #6b7280; margin-bottom: 2px; text-transform: uppercase; font-weight: 700;">Scan Duration</div>
+                                    <div style="font-size: 14px; font-weight: 700; color: #1f2937;">${elapsedTime}</div>
+                                </div>
+                            </td>
+                            <td style="width: 33.33%; padding-left: 6px; vertical-align: top;">
+                                <div style="border: 1px solid #e5e7eb; border-radius: 6px; padding: 10px; text-align: center; background-color: #f9fafb;">
+                                    <div style="font-size: 10px; color: #6b7280; margin-bottom: 2px; text-transform: uppercase; font-weight: 700;">Engine Speed</div>
+                                    <div style="font-size: 14px; font-weight: 700; color: #1f2937;">${engineSpeed}</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div>
+                    <h3 style="font-size: 12px; text-transform: uppercase; color: #6b7280; margin: 0 0 10px 0; font-weight: 700; letter-spacing: 0.05em;">Audit Findings</h3>
+                    ${totalVulns === 0 ? `
+                        <div style="border: 1px solid #e5e7eb; border-radius: 6px; padding: 20px; text-align: center; color: #6b7280; background-color: #f9fafb; font-size: 12px;">
+                            No vulnerabilities were detected. The analyzed code complies with the Sentinel machine learning security heuristic thresholds.
+                        </div>
+                    ` : `
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid #e5e7eb;">
+                                    <th style="padding: 7px 10px; font-size: 10px; text-transform: uppercase; color: #6b7280; font-weight: 700; text-align: left; width: 35%;">Vulnerability Type</th>
+                                    <th style="padding: 7px 10px; font-size: 10px; text-transform: uppercase; color: #6b7280; font-weight: 700; text-align: left; width: 45%;">File Location</th>
+                                    <th style="padding: 7px 10px; font-size: 10px; text-transform: uppercase; color: #6b7280; font-weight: 700; text-align: right; width: 20%;">AI Confidence</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${realVulns.map((v) => `
+                                    <tr style="border-bottom: 1px solid #f3f4f6;">
+                                        <td style="padding: 9px 10px; font-size: 12px; font-weight: 700; color: #ef4444; word-break: break-word;">${pdfEscapeHtml(v.vulnerability)}</td>
+                                        <td style="padding: 9px 10px; font-size: 11px; font-family: monospace; color: #4b5563; word-break: break-all;">${pdfEscapeHtml(v.file)}</td>
+                                        <td style="padding: 9px 10px; font-size: 12px; text-align: right; font-family: monospace; font-weight: 700; color: #1f2937;">${(v.confidence * 100).toFixed(1)}%</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `}
+                </div>
+
+                ${codeContextHtml}
+
+                <div style="margin-top: 36px; border-top: 1px solid #e5e7eb; padding-top: 12px; font-size: 10px; color: #9ca3af; text-align: center;">
+                    Sentinel Static Code Security Analysis Engine • Release v1.0.0
+                </div>
+            `;
+
+            // Append to DOM to allow correct layout and stylesheet processing
+            wrapper.appendChild(element);
+            document.body.appendChild(wrapper);
+
+            // Configure and trigger the html2pdf download
+            const options = {
+                margin: 10,
+                filename: `sentinel-security-report-${new Date().toISOString().slice(0,10)}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true, scrollY: 0, scrollX: 0, logging: false },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().from(element).set(options).save().then(() => {
+                document.body.removeChild(wrapper);
+            }).catch(err => {
+                console.error("PDF export error:", err);
+                if (wrapper.parentNode) {
+                    document.body.removeChild(wrapper);
+                }
+            });
+        }
+        exportPDF();
+    });
+}); // end DOMContentLoaded
 </script>
 </body>
 </html>

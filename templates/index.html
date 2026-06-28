@@ -3,6 +3,8 @@
 <html class="dark" lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sentinel - AI-Powered Code Security</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none' stroke='%23d0bcff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='50' cy='50' r='18' stroke-width='2' /%3E%3Crect x='42' y='48' width='16' height='12' rx='2' fill='none' stroke-width='2' /%3E%3Cpath d='M45 48 v-4 a5 5 0 0 1 10 0 v4' stroke-width='2' /%3E%3Ccircle cx='50' cy='53' r='1.5' fill='%23d0bcff' /%3E%3Cline x1='50' y1='54.5' x2='50' y2='57' stroke-width='1.5' /%3E%3Cline x1='50' y1='32' x2='50' y2='16' /%3E%3Ccircle cx='50' cy='14' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M62 38 l8 -8 h10' /%3E%3Ccircle cx='82' cy='30' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M68 50 h12' /%3E%3Ccircle cx='82' cy='50' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M62 62 l8 8 h10' /%3E%3Ccircle cx='82' cy='70' r='2.5' fill='%23d0bcff' /%3E%3Cline x1='50' y1='68' x2='50' y2='84' /%3E%3Ccircle cx='50' cy='86' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M38 62 l-8 8 h-10' /%3E%3Ccircle cx='18' cy='70' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M32 50 h-12' /%3E%3Ccircle cx='18' cy='50' r='2.5' fill='%23d0bcff' /%3E%3Cpath d='M38 38 l-8 -8 h-10' /%3E%3Ccircle cx='18' cy='30' r='2.5' fill='%23d0bcff' /%3E%3C/svg%3E">
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist:wght@500;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -127,27 +129,41 @@
 <body class="font-body-base">
 <!-- Top Navigation Bar -->
 <header class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-6 py-3 bg-surface-container-lowest/80 backdrop-blur-md border border-outline-variant/20 rounded-full mt-4 mx-auto w-[95%] max-w-container_max_width shadow-2xl">
-<div class="flex items-center gap-2">
+<a href="/" class="flex items-center gap-3 hover:opacity-90 transition-opacity">
+<svg class="w-7 h-7 text-primary" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="50" cy="50" r="18" stroke-width="2.5" />
+  <rect x="42" y="48" width="16" height="12" rx="2" fill="none" stroke-width="2.5" />
+  <path d="M45 48 v-4 a5 5 0 0 1 10 0 v4" stroke-width="2.5" />
+  <circle cx="50" cy="53" r="1.5" fill="currentColor" />
+  <line x1="50" y1="54.5" x2="50" y2="57" stroke-width="2" />
+  <line x1="50" y1="32" x2="50" y2="16" />
+  <circle cx="50" cy="14" r="2.5" fill="currentColor" />
+  <path d="M62 38 l8 -8 h10" />
+  <circle cx="82" cy="30" r="2.5" fill="currentColor" />
+  <path d="M68 50 h12" />
+  <circle cx="82" cy="50" r="2.5" fill="currentColor" />
+  <path d="M62 62 l8 8 h10" />
+  <circle cx="82" cy="70" r="2.5" fill="currentColor" />
+  <line x1="50" y1="68" x2="50" y2="84" />
+  <circle cx="50" cy="86" r="2.5" fill="currentColor" />
+  <path d="M38 62 l-8 8 h-10" />
+  <circle cx="18" cy="70" r="2.5" fill="currentColor" />
+  <path d="M32 50 h-12" />
+  <circle cx="18" cy="50" r="2.5" fill="currentColor" />
+  <path d="M38 38 l-8 -8 h-10" />
+  <circle cx="18" cy="30" r="2.5" fill="currentColor" />
+</svg>
 <span class="font-display-lg text-headline-md font-bold tracking-tight text-primary">Sentinel</span>
-</div>
-<nav class="hidden md:flex items-center gap-8">
+</a>
+<nav class="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-8">
 <a class="text-primary font-semibold border-b-2 border-primary pb-1 font-display-lg text-body-base" href="/">Home</a>
 <a class="text-on-surface-variant hover:text-on-surface transition-colors font-display-lg text-body-base" href="/dashboard">Dashboard</a>
 <a class="text-on-surface-variant hover:text-on-surface transition-colors font-display-lg text-body-base" href="/docs">Docs</a>
 </nav>
-<div class="flex items-center gap-4">
-<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-variant/30 rounded-full px-3 py-1 transition-all">notifications</button>
-<a href="/dashboard" class="bg-primary text-on-primary font-semibold px-6 py-2 rounded-full scale-95 active:scale-90 transition-transform inline-block text-center">Start Scan</a>
-</div>
 </header>
 <main class="pt-24">
-<!-- Hero Section -->
 <section class="max-w-container_max_width mx-auto px-margin_desktop grid grid-cols-1 lg:grid-cols-2 gap-gutter items-center min-h-[600px] py-12">
 <div class="flex flex-col gap-6">
-<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 w-fit">
-<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-<span class="font-mono-label text-secondary text-mono-label">System Status: Optimal</span>
-</div>
 <h1 class="font-display-lg text-display-lg max-w-xl">AI-powered vulnerability detection for Python source code.</h1>
 <p class="text-on-surface-variant text-body-base max-w-lg">
                     Sentinel integrates static code parsing with machine learning to evaluate Python source code. Trained on security patches from the CVEfixes database, it extracts structural code metrics and security heuristics to classify vulnerabilities and support code review.
@@ -230,7 +246,7 @@
 <h3 class="font-display-lg text-headline-md">Detect</h3>
 <p class="text-on-surface-variant text-body-sm">Performs fast lexical scanning and extracts structural code metrics (complexity, line counts, nesting depth) alongside customized security indicators.</p>
 <div class="mt-auto pt-4 border-t border-outline-variant/10">
-<a class="text-primary font-mono-label flex items-center gap-2" href="#how-it-works">Exploration Guide <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+<a class="text-primary font-mono-label flex items-center gap-2" href="/docs#usage-guide">Exploration Guide <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
 </div>
 </div>
 <!-- Card 2: Analyze -->
@@ -241,7 +257,7 @@
 <h3 class="font-display-lg text-headline-md">Analyze</h3>
 <p class="text-on-surface-variant text-body-sm">Passes combined features to a threshold-calibrated classifier model trained to generalize effectively across unseen repositories.</p>
 <div class="mt-auto pt-4 border-t border-outline-variant/10">
-<a class="text-secondary font-mono-label flex items-center gap-2" href="#ml-models">Model Specs <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+<a class="text-secondary font-mono-label flex items-center gap-2" href="/docs#ml-models">Model Specs <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
 </div>
 </div>
 <!-- Card 3: Report -->
@@ -344,8 +360,8 @@
 <section class="py-32 relative overflow-hidden">
 <div class="max-w-container_max_width mx-auto px-margin_desktop text-center relative z-10">
 <div class="obsidian-glass p-16 rounded-3xl space-y-8 max-w-4xl mx-auto">
-<h2 class="font-display-lg text-display-lg">Academic Code Security Analysis Engine</h2>
-<p class="text-on-surface-variant text-headline-md max-w-2xl mx-auto">An academic evaluation of machine learning classifiers for source code vulnerability detection.</p>
+<h2 class="font-display-lg text-display-lg">Machine Learning Code Security Engine</h2>
+<p class="text-on-surface-variant text-headline-md max-w-2xl mx-auto">A machine learning approach to static source code vulnerability detection and classification.</p>
 <div class="flex justify-center gap-6">
 <a href="/dashboard" class="bg-primary text-on-primary font-bold px-12 py-5 rounded-xl text-lg hover:scale-105 transition-transform inline-block text-center">Start Scanning</a>
 </div>
@@ -358,8 +374,33 @@
 <!-- Footer -->
 <footer class="w-full py-12 px-margin_desktop flex flex-col md:flex-row justify-between items-center gap-gutter bg-surface-container-lowest border-t border-outline-variant/10">
 <div class="flex flex-col gap-2">
+<a href="/" class="flex items-center gap-2 hover:opacity-90 transition-opacity">
+<svg class="w-5 h-5 text-on-surface" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="50" cy="50" r="18" stroke-width="2.5" />
+  <rect x="42" y="48" width="16" height="12" rx="2" fill="none" stroke-width="2.5" />
+  <path d="M45 48 v-4 a5 5 0 0 1 10 0 v4" stroke-width="2.5" />
+  <circle cx="50" cy="53" r="1.5" fill="currentColor" />
+  <line x1="50" y1="54.5" x2="50" y2="57" stroke-width="2" />
+  <line x1="50" y1="32" x2="50" y2="16" />
+  <circle cx="50" cy="14" r="2.5" fill="currentColor" />
+  <path d="M62 38 l8 -8 h10" />
+  <circle cx="82" cy="30" r="2.5" fill="currentColor" />
+  <path d="M68 50 h12" />
+  <circle cx="82" cy="50" r="2.5" fill="currentColor" />
+  <path d="M62 62 l8 8 h10" />
+  <circle cx="82" cy="70" r="2.5" fill="currentColor" />
+  <line x1="50" y1="68" x2="50" y2="84" />
+  <circle cx="50" cy="86" r="2.5" fill="currentColor" />
+  <path d="M38 62 l-8 8 h-10" />
+  <circle cx="18" cy="70" r="2.5" fill="currentColor" />
+  <path d="M32 50 h-12" />
+  <circle cx="18" cy="50" r="2.5" fill="currentColor" />
+  <path d="M38 38 l-8 -8 h-10" />
+  <circle cx="18" cy="30" r="2.5" fill="currentColor" />
+</svg>
 <span class="font-display-lg text-lg font-bold text-on-surface">Sentinel</span>
-<p class="font-body-sm text-body-sm text-on-surface-variant">© 2026 Sentinel Academic Evaluation Project.</p>
+</a>
+<p class="font-body-sm text-body-sm text-on-surface-variant">© 2026 Sentinel Security Engine.</p>
 </div>
 <div class="flex gap-8">
 <a class="text-on-surface-variant hover:text-primary transition-colors font-body-sm text-body-sm" href="/docs">Docs</a>

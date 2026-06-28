@@ -100,5 +100,40 @@ def scan_repo():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/api/scan/file', methods=['POST'])
+def scan_file():
+    s = get_scanner()
+    if not engine_ready or s is None:
+        return jsonify({"error": "AI Engine is offline"}), 503
+        
+    if 'file' not in request.files:
+        return jsonify({"error": "No file uploaded"}), 400
+        
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No file selected"}), 400
+        
+    if not file.filename.endswith('.py'):
+        return jsonify({"error": "Only Python (.py) files are supported"}), 400
+        
+    try:
+        code_content = file.read().decode('utf-8', errors='ignore')
+        vuln_type, confidence = s.engine.scan_code_snippet(code_content)
+        vulns = []
+        if vuln_type != "Safe Code":
+            vulns.append({
+                "file": file.filename, 
+                "vulnerability": vuln_type, 
+                "confidence": confidence
+            })
+            
+        return jsonify({
+            "target": file.filename,
+            "files_scanned": 1,
+            "vulnerabilities": vulns
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
