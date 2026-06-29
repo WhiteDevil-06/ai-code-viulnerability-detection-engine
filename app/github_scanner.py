@@ -11,34 +11,10 @@ import subprocess
 import tempfile
 import zipfile
 import io
+import time
 import requests
-from concurrent.futures import ProcessPoolExecutor, as_completed
+import requests
 from app.scanner import CodeScanner
-
-# Global variable for the worker process to hold the loaded ML model
-_worker_scanner = None
-
-def init_worker():
-    global _worker_scanner
-    # Initialize the model once per worker process to avoid pickling overhead
-    _worker_scanner = CodeScanner()
-
-def scan_file_worker(root: str, file: str, repo_dir: str) -> dict | None:
-    """Scan a single Python file using the global worker scanner."""
-    file_path = os.path.join(root, file)
-    try:
-        with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
-            raw_code = f.read()
-        vuln_type, confidence = _worker_scanner.scan_code_snippet(raw_code)
-        clean_name = file_path.replace(repo_dir, "").lstrip("/\\")
-        return {
-            "file":          clean_name,
-            "vulnerability": vuln_type,
-            "confidence":    confidence,
-            "code":          raw_code
-        }
-    except Exception:
-        return None
 
 class GitHubScanner:
     def __init__(self):
@@ -54,21 +30,32 @@ class GitHubScanner:
             raise ValueError("Only https://github.com/ URLs are supported.")
 
         with tempfile.TemporaryDirectory() as tmp:
-            # Choose download method
+            # Try ZIP download first (usually faster and avoids Git credential hangs)
             repo_dir = None
-            if shutil.which("git"):
+            t1 = time.time()
+            try:
+                repo_dir = self._download_via_zip(github_url, tmp)
+                print(f"[*] ZIP download and extract took {time.time() - t1:.2f}s")
+            except Exception as e:
+                print(f"[*] ZIP download failed: {e}. Falling back to git clone...")
+                repo_dir = None
+
+            # Fallback to git clone if ZIP failed
+            if not repo_dir and shutil.which("git"):
+                t0 = time.time()
                 try:
                     repo_dir = self._clone_via_git(github_url, tmp)
+                    print(f"[*] Git clone took {time.time() - t0:.2f}s")
                 except subprocess.CalledProcessError:
-                    repo_dir = None
+                    raise ValueError(f"Failed to access repository: {github_url}. It may be private, deleted, or invalid.")
                     
             if not repo_dir:
-                try:
-                    repo_dir = self._download_via_zip(github_url, tmp)
-                except Exception as e:
-                    raise ValueError(f"Failed to access repository: {github_url}. It may be private, deleted, or invalid.")
+                 raise ValueError(f"Failed to access repository: {github_url}. Both ZIP and Git methods failed.")
 
-            return self._scan_directory(github_url, repo_dir)
+            t2 = time.time()
+            result = self._scan_directory(github_url, repo_dir)
+            print(f"[*] Actual AI Analysis (ThreadPool) took {time.time() - t2:.2f}s")
+            return result
 
     # ── Download methods ────────────────────────────────────────────────────────
     def _clone_via_git(self, github_url: str, tmp_dir: str) -> str:
@@ -127,16 +114,22 @@ class GitHubScanner:
         vulnerabilities = []
         files_scanned = len(file_tasks)
         
-        # Parallelize lexical analysis and model predictions using true multiprocessing
-        with ProcessPoolExecutor(max_workers=max(1, os.cpu_count() - 1), initializer=init_worker) as executor:
-            futures = [
-                executor.submit(scan_file_worker, root, file, repo_dir)
-                for root, file in file_tasks
-            ]
-            for fut in as_completed(futures):
-                res = fut.result()
-                if res is not None:
-                    vulnerabilities.append(res)
+        for root, file in file_tasks:
+            file_path = os.path.join(root, file)
+            try:
+                with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+                    raw_code = f.read()
+                vuln_type, confidence = self.engine.scan_code_snippet(raw_code)
+                clean_name = file_path.replace(repo_dir, "").lstrip("/\\")
+                vulnerabilities.append({
+                    "file":          clean_name,
+                    "vulnerability": vuln_type,
+                    "confidence":    confidence,
+                    "code":          raw_code
+                })
+            except Exception as e:
+                print(f"[-] Error scanning {file_path}: {e}")
+                pass
 
         return {
             "target":          github_url,
