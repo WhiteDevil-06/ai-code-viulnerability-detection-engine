@@ -591,7 +591,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Color comments
             safeLine = safeLine.replace(/(#.*)/g, '<span class="syntax-comment">$1</span>');
 
-            lineDiv.innerHTML = safeLine;
+            lineDiv.innerHTML = safeLine || '&nbsp;';
 
             const isVulnLine = checkIsVulnerableLine(line, vulnType);
             if (isVulnLine) {
@@ -662,7 +662,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // Progress Ring
         const ring = document.getElementById('stat-progress-ring');
-        ring.setAttribute('stroke-dashoffset', '0'); // Complete ring
+        ring.style.strokeDashoffset = '0'; // Complete ring
         document.getElementById('stat-progress-pct').textContent = "100%";
         document.getElementById('stat-analysis-title').textContent = "Analysis Complete";
         document.getElementById('stat-analysis-subtitle').textContent = "Scan metrics verified";
@@ -750,13 +750,19 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         vulnerabilities.forEach((vuln, index) => {
-            const colorClass = vuln.vulnerability === 'Safe Code' ? 'text-secondary' : 'text-error';
+            const isSafe = vuln.vulnerability === 'Safe Code';
+            const colorClass = isSafe ? 'text-secondary' : 'text-error';
             const confPercent = (vuln.confidence * 100).toFixed(1);
+            
+            const statusBadge = isSafe 
+                ? `<span class="px-3 py-1 bg-secondary/20 text-secondary border border-secondary/20 rounded-full text-[10px] font-bold"><span class="material-symbols-outlined text-[10px] align-middle mr-1">check_circle</span>Safe</span>`
+                : `<span class="px-3 py-1 bg-error-container/50 text-error rounded-full text-[10px] font-bold">Open</span>`;
+
             const tr = document.createElement('tr');
-            tr.className = 'border-b border-white/5 hover:bg-white/5 transition-colors group';
+            tr.className = 'border-b border-white/5 hover:bg-white/5 transition-colors group cursor-pointer';
             tr.innerHTML = `
                 <td class="py-4 font-semibold ${colorClass}">${vuln.vulnerability}</td>
-                <td class="py-4 text-on-surface-variant font-mono">${vuln.file}</td>
+                <td class="py-4 text-on-surface-variant font-mono text-[13px]">${vuln.file}</td>
                 <td class="py-4">
                     <div class="flex items-center gap-2">
                         <div class="w-16 h-1 bg-white/10 rounded-full overflow-hidden">
@@ -766,7 +772,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                 </td>
                 <td class="py-4 text-right">
-                    <span class="px-3 py-1 bg-surface-variant/50 text-on-surface-variant rounded-full text-[10px]">Open</span>
+                    ${statusBadge}
                 </td>
             `;
             
@@ -778,6 +784,28 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Global State for Scanners
+    window.globalProgressInterval = null;
+    window.currentAborter = null;
+
+    function resetScanners() {
+        if (window.currentAborter) {
+            window.currentAborter.abort();
+        }
+        window.currentAborter = new AbortController();
+        if (window.globalProgressInterval) {
+            clearInterval(window.globalProgressInterval);
+        }
+        
+        // Reset buttons visually
+        document.getElementById('run-analysis-btn').disabled = false;
+        document.getElementById('run-analysis-btn').innerHTML = '<span class="material-symbols-outlined" data-icon="bolt" data-weight="fill">bolt</span> Run Analysis';
+        document.getElementById('run-file-btn').disabled = false;
+        document.getElementById('run-file-btn').innerHTML = '<span class="material-symbols-outlined" data-icon="upload">upload</span> Scan File';
+        document.getElementById('run-code-btn').disabled = false;
+        document.getElementById('run-code-btn').innerHTML = '<span class="material-symbols-outlined" data-icon="bolt">bolt</span> Scan Snippet';
+    }
+
     // 6. Action 1: Repository URL Scanner
     const runBtn = document.getElementById('run-analysis-btn');
     const repoInput = document.getElementById('repo-url-input');
@@ -785,6 +813,9 @@ document.addEventListener("DOMContentLoaded", () => {
     runBtn.addEventListener('click', () => {
         const url = repoInput.value.trim();
         if (!url) return showNotification("Please enter a repository URL.");
+        
+        resetScanners();
+        const signal = window.currentAborter.signal;
         
         document.getElementById('export-pdf-btn').classList.add('hidden');
         
@@ -806,7 +837,7 @@ document.addEventListener("DOMContentLoaded", () => {
         progressLabel.textContent = 'Cloning Repository...';
 
         let progress = 0;
-        let progressInterval = setInterval(() => {
+        window.globalProgressInterval = setInterval(() => {
             if (progress < 30) {
                 progress += Math.random() * 5;
                 if (progress > 30) progress = 30;
@@ -828,8 +859,11 @@ document.addEventListener("DOMContentLoaded", () => {
             // Also update the circular ring
             const ring = document.getElementById('stat-progress-ring');
             const pct = document.getElementById('stat-progress-pct');
-            const dashOffset = 175 - (175 * roundedProgress / 100);
-            ring.setAttribute('stroke-dashoffset', dashOffset);
+            const radius = ring.r.baseVal.value;
+            const circumference = radius * 2 * Math.PI;
+            ring.style.strokeDasharray = `${circumference} ${circumference}`;
+            const dashOffset = circumference - (roundedProgress / 100) * circumference;
+            ring.style.strokeDashoffset = dashOffset;
             pct.textContent = `${roundedProgress}%`;
         }, 150);
 
@@ -838,14 +872,15 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch('/api/scan/repo', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url })
+            body: JSON.stringify({ url }),
+            signal: signal
         })
         .then(res => res.json())
         .then(data => {
             runBtn.disabled = false;
             runBtn.innerHTML = '<span class="material-symbols-outlined" data-icon="bolt" data-weight="fill">bolt</span> Run Analysis';
             
-            clearInterval(progressInterval);
+            clearInterval(window.globalProgressInterval);
             progressBar.style.width = '100%';
             progressPct.textContent = '100%';
             progressLabel.textContent = 'Analysis Complete!';
@@ -853,7 +888,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Update circular progress to 100%
             const ring = document.getElementById('stat-progress-ring');
             const pct = document.getElementById('stat-progress-pct');
-            ring.setAttribute('stroke-dashoffset', '0');
+            ring.style.strokeDashoffset = '0';
             pct.textContent = '100%';
 
             if (data.error) {
@@ -881,9 +916,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         })
         .catch(err => {
+            if (err.name === 'AbortError') return; // Ignore aborts
             runBtn.disabled = false;
             runBtn.innerHTML = '<span class="material-symbols-outlined" data-icon="bolt" data-weight="fill">bolt</span> Run Analysis';
-            clearInterval(progressInterval);
+            clearInterval(window.globalProgressInterval);
             progressContainer.classList.add('hidden');
             document.getElementById('export-pdf-btn').classList.add('hidden');
             console.error("Scan error:", err);
@@ -917,6 +953,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         document.getElementById('export-pdf-btn').classList.add('hidden');
+        
+        resetScanners();
+        const signal = window.currentAborter.signal;
 
         runFileBtn.disabled = true;
         runFileBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">sync</span> Scanning...';
@@ -936,7 +975,7 @@ document.addEventListener("DOMContentLoaded", () => {
         progressLabel.textContent = 'Uploading File...';
 
         let progress = 0;
-        let progressInterval = setInterval(() => {
+        window.globalProgressInterval = setInterval(() => {
             if (progress < 40) {
                 progress += Math.random() * 8;
                 if (progress > 40) progress = 40;
@@ -954,8 +993,11 @@ document.addEventListener("DOMContentLoaded", () => {
             // Also update the circular ring
             const ring = document.getElementById('stat-progress-ring');
             const pct = document.getElementById('stat-progress-pct');
-            const dashOffset = 175 - (175 * roundedProgress / 100);
-            ring.setAttribute('stroke-dashoffset', dashOffset);
+            const radius = ring.r.baseVal.value;
+            const circumference = radius * 2 * Math.PI;
+            ring.style.strokeDasharray = `${circumference} ${circumference}`;
+            const dashOffset = circumference - (roundedProgress / 100) * circumference;
+            ring.style.strokeDashoffset = dashOffset;
             pct.textContent = `${roundedProgress}%`;
         }, 120);
 
@@ -970,14 +1012,15 @@ document.addEventListener("DOMContentLoaded", () => {
             
             fetch('/api/scan/file', {
                 method: 'POST',
-                body: formData
+                body: formData,
+                signal: signal
             })
             .then(res => res.json())
             .then(data => {
                 runFileBtn.disabled = false;
                 runFileBtn.innerHTML = '<span class="material-symbols-outlined" data-icon="upload">upload</span> Scan File';
                 
-                clearInterval(progressInterval);
+                clearInterval(window.globalProgressInterval);
                 progressBar.style.width = '100%';
                 progressPct.textContent = '100%';
                 progressLabel.textContent = 'Analysis Complete!';
@@ -985,7 +1028,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Update circular progress to 100%
                 const ring = document.getElementById('stat-progress-ring');
                 const pct = document.getElementById('stat-progress-pct');
-                ring.setAttribute('stroke-dashoffset', '0');
+                ring.style.strokeDashoffset = '0';
                 pct.textContent = '100%';
 
                 if (data.error) {
@@ -1015,15 +1058,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     }];
                 }
 
-                renderVulnerabilitiesTable(activeVulnerabilities.filter(v => v.vulnerability !== "Safe Code"));
+                renderVulnerabilitiesTable(activeVulnerabilities);
                 updateStatsDashboard(activeVulnerabilities, 1, elapsedSeconds);
                 displayCode(activeVulnerabilities[0].file, activeVulnerabilities[0].code, activeVulnerabilities[0].vulnerability);
                 document.getElementById('export-pdf-btn').classList.remove('hidden');
             })
             .catch(err => {
+                if (err.name === 'AbortError') return;
                 runFileBtn.disabled = false;
                 runFileBtn.innerHTML = '<span class="material-symbols-outlined" data-icon="upload">upload</span> Scan File';
-                clearInterval(progressInterval);
+                clearInterval(window.globalProgressInterval);
                 progressContainer.classList.add('hidden');
                 document.getElementById('export-pdf-btn').classList.add('hidden');
                 console.error("File scan error:", err);
@@ -1042,6 +1086,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!codeText) return showNotification("Please paste a Python code snippet to scan.");
 
         document.getElementById('export-pdf-btn').classList.add('hidden');
+        
+        resetScanners();
+        const signal = window.currentAborter.signal;
 
         runCodeBtn.disabled = true;
         runCodeBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">sync</span> Scanning...';
@@ -1054,7 +1101,8 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch('/api/scan/code', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code: codeText })
+            body: JSON.stringify({ code: codeText }),
+            signal: signal
         })
         .then(res => res.json())
         .then(data => {
@@ -1087,12 +1135,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 }];
             }
 
-            renderVulnerabilitiesTable(activeVulnerabilities.filter(v => v.vulnerability !== "Safe Code"));
+            renderVulnerabilitiesTable(activeVulnerabilities);
             updateStatsDashboard(activeVulnerabilities, 1, elapsedSeconds);
             displayCode(activeVulnerabilities[0].file, activeVulnerabilities[0].code, activeVulnerabilities[0].vulnerability);
             document.getElementById('export-pdf-btn').classList.remove('hidden');
         })
         .catch(err => {
+            if (err.name === 'AbortError') return;
             runCodeBtn.disabled = false;
             runCodeBtn.innerHTML = '<span class="material-symbols-outlined">search</span> Scan Snippet';
             document.getElementById('export-pdf-btn').classList.add('hidden');
@@ -1107,14 +1156,11 @@ document.addEventListener("DOMContentLoaded", () => {
         function exportPDF() {
             // Gather scan details
             let target = 'Pasted Code Snippet';
-            const activeTab = document.querySelector('.border-b-2.border-primary');
-            if (activeTab) {
-                if (activeTab.id === 'tab-repo-btn') {
-                    target = document.getElementById('repo-url-input').value.trim() || 'GitHub Repository';
-                } else if (activeTab.id === 'tab-file-btn') {
-                    const fileNameElem = document.getElementById('file-upload-name');
-                    target = (fileNameElem && fileNameElem.textContent.startsWith('Selected:')) ? fileNameElem.textContent.replace('Selected:', '').trim() : 'Uploaded Python File';
-                }
+            if (document.getElementById('tab-repo-btn').classList.contains('border-primary')) {
+                target = document.getElementById('repo-url-input').value.trim() || 'GitHub Repository';
+            } else if (document.getElementById('tab-file-btn').classList.contains('border-primary')) {
+                const fileNameElem = document.getElementById('file-upload-name');
+                target = (fileNameElem && fileNameElem.textContent.startsWith('Selected:')) ? fileNameElem.textContent.replace('Selected:', '').trim() : 'Uploaded Python File';
             }
 
             const scanTime = new Date().toLocaleString();
@@ -1177,48 +1223,94 @@ document.addEventListener("DOMContentLoaded", () => {
                 return false;
             }
 
-            // Helper: render code block HTML with red-highlighted vulnerable lines
-            function buildCodeBlockHtml(codeText, vulnType) {
-                const lines = (codeText || '').split('\n');
+            // Helper: render code snippet HTML showing only vulnerable context
+            function buildSnippetCodeBlocks(v) {
+                const codeText = v.code || '';
+                const lines = codeText.split('\n');
+                
+                // Find vulnerable lines
+                let vulnIndices = [];
+                lines.forEach((line, idx) => {
+                    if (pdfIsVulnLine(line, v.vulnerability)) {
+                        vulnIndices.push(idx);
+                    }
+                });
+
+                // Fallback if no specific line is found by heuristic regex (e.g. general model flag)
+                if (vulnIndices.length === 0) {
+                    vulnIndices = [0];
+                }
+
+                // Gather +/- 5 lines of context around each vulnerability
+                let displayLines = new Set();
+                vulnIndices.forEach(idx => {
+                    for (let i = Math.max(0, idx - 5); i <= Math.min(lines.length - 1, idx + 5); i++) {
+                        displayLines.add(i);
+                    }
+                });
+
+                let sortedLines = Array.from(displayLines).sort((a, b) => a - b);
+                
+                // Limit massive fallbacks
+                if (vulnIndices.length === 1 && vulnIndices[0] === 0 && sortedLines.length > 20) {
+                    sortedLines = sortedLines.slice(0, 20);
+                }
+
                 let rowsHtml = '';
-                lines.forEach((line, i) => {
-                    const isVuln = pdfIsVulnLine(line, vulnType);
+                let lastLineIdx = -2;
+
+                sortedLines.forEach(idx => {
+                    const lineNum = idx + 1;
+                    const line = lines[idx];
+                    
+                    if (lastLineIdx !== -2 && idx - lastLineIdx > 1) {
+                        rowsHtml += `<tr>
+                                <td style="padding: 2px 10px 2px 0; text-align: right; min-width: 28px; font-size: 11px; font-family: monospace; color: #6b7280; vertical-align: top;">...</td>
+                                <td style="padding: 2px 4px; font-size: 11px; font-family: monospace; color: #6b7280;"></td>
+                            </tr>`;
+                    }
+                    
+                    const isVuln = pdfIsVulnLine(line, v.vulnerability);
                     const safeLine = pdfEscapeHtml(line) || '&nbsp;';
                     const rowBg = isVuln ? 'background-color: rgba(239, 68, 68, 0.12);' : '';
                     const numColor = isVuln ? 'color: #ef4444;' : 'color: #6b7280;';
                     const borderLeft = isVuln ? 'border-left: 3px solid #ef4444; padding-left: 8px;' : 'border-left: 3px solid transparent; padding-left: 8px;';
                     const codeColor = isVuln ? 'color: #fca5a5;' : 'color: #d1d5db;';
                     rowsHtml += `<tr style="${rowBg}">
-                            <td style="padding: 2px 10px 2px 0; text-align: right; min-width: 28px; font-size: 11px; font-family: monospace; ${numColor} vertical-align: top;">${i + 1}</td>
+                            <td style="padding: 2px 10px 2px 0; text-align: right; min-width: 28px; font-size: 11px; font-family: monospace; ${numColor} vertical-align: top;">${lineNum}</td>
                             <td style="padding: 2px 4px; font-size: 11px; font-family: monospace; white-space: pre; ${codeColor} ${borderLeft}">${safeLine}</td>
                         </tr>`;
+                        
+                    lastLineIdx = idx;
                 });
-                return rowsHtml;
+
+                return `<div style="margin-bottom: 20px; page-break-inside: avoid;">
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px;">
+                            <tr>
+                                <td style="vertical-align: middle;">
+                                    <span style="font-size: 12px; font-weight: 700; color: #ef4444;">${pdfEscapeHtml(v.vulnerability)}</span>
+                                </td>
+                                <td style="text-align: right; vertical-align: middle;">
+                                    <span style="font-size: 11px; color: #6b7280; font-family: monospace;">${pdfEscapeHtml(v.file)}</span>
+                                </td>
+                            </tr>
+                        </table>
+                        <div style="background-color: #0f1117; border-radius: 8px; border: 1px solid #2d3748; overflow: hidden;">
+                            <div style="background-color: #1a1f2e; padding: 7px 14px; font-size: 11px; color: #9ca3af; font-family: monospace; border-bottom: 1px solid #2d3748;">Snippet from ${pdfEscapeHtml(v.file)}</div>
+                            <table style="width: 100%; border-collapse: collapse; padding: 6px 0;">
+                                ${rowsHtml}
+                            </table>
+                        </div>
+                    </div>`;
             }
 
-            // Build code sections for each vulnerability
+            // Build code sections for each vulnerability (Limit to top 5 to prevent massive PDFs)
+            const topVulns = realVulns.slice(0, 5);
             let codeContextHtml = '';
-            if (realVulns.length > 0 && realVulns.some(v => v.code)) {
-                const codeBlocksHtml = realVulns.map((v) => {
+            if (topVulns.length > 0 && topVulns.some(v => v.code)) {
+                const codeBlocksHtml = topVulns.map((v) => {
                     if (!v.code) return '';
-                    return `<div style="margin-bottom: 20px; page-break-inside: avoid;">
-                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px;">
-                                <tr>
-                                    <td style="vertical-align: middle;">
-                                        <span style="font-size: 12px; font-weight: 700; color: #ef4444;">${pdfEscapeHtml(v.vulnerability)}</span>
-                                    </td>
-                                    <td style="text-align: right; vertical-align: middle;">
-                                        <span style="font-size: 11px; color: #6b7280; font-family: monospace;">${pdfEscapeHtml(v.file)}</span>
-                                    </td>
-                                </tr>
-                            </table>
-                            <div style="background-color: #0f1117; border-radius: 8px; border: 1px solid #2d3748; overflow: hidden;">
-                                <div style="background-color: #1a1f2e; padding: 7px 14px; font-size: 11px; color: #9ca3af; font-family: monospace; border-bottom: 1px solid #2d3748;">${pdfEscapeHtml(v.file)}</div>
-                                <table style="width: 100%; border-collapse: collapse; padding: 6px 0;">
-                                    ${buildCodeBlockHtml(v.code, v.vulnerability)}
-                                </table>
-                            </div>
-                        </div>`;
+                    return buildSnippetCodeBlocks(v);
                 }).join('');
 
                 codeContextHtml = `<div style="margin-top: 30px;">
@@ -1357,7 +1449,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 filename: `sentinel-security-report-${new Date().toISOString().slice(0,10)}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true, scrollY: 0, scrollX: 0, logging: false },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak: { mode: ['avoid-all', 'css'] }
             };
 
             html2pdf().from(element).set(options).save().then(() => {

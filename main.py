@@ -124,12 +124,11 @@ def scan_file():
         code_content = file.read().decode('utf-8', errors='ignore')
         vuln_type, confidence = s.engine.scan_code_snippet(code_content)
         vulns = []
-        if vuln_type != "Safe Code":
-            vulns.append({
-                "file": file.filename, 
-                "vulnerability": vuln_type, 
-                "confidence": confidence
-            })
+        vulns.append({
+            "file": file.filename, 
+            "vulnerability": vuln_type, 
+            "confidence": confidence
+        })
             
         return jsonify({
             "target": file.filename,

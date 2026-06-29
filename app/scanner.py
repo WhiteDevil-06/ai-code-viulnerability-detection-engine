@@ -85,13 +85,19 @@ class CodeScanner:
         code_lower = code_snippet.lower()
         if "eval(" in code_lower or "exec(" in code_lower:
             return "Unsafe eval() usage"
-        if any(cmd in code_lower for cmd in ["os.system", "os.popen", "subprocess.run", "subprocess.popen", "subprocess.call"]):
+        if any(cmd in code_lower for cmd in ["os.system", "os.popen", "subprocess.run", "subprocess.popen", "subprocess.call", "subprocess.check_output"]):
             return "Command Injection"
         if any(sql in code_lower for sql in ["select ", "insert ", "update ", "delete "]) and (".execute(" in code_lower or ".executemany(" in code_lower):
-            if any(fmt in code_lower for fmt in ["f'", 'f"', "%", ".format("]):
-                return "SQL Injection"
+            return "SQL Injection"
         if "render_template_string" in code_lower or "markup(" in code_lower:
             return "Cross-Site Scripting (XSS)"
+            
+        # Fallbacks for other types
+        if "hashlib.md5" in code_lower or "hashlib.sha1" in code_lower:
+            return "Weak Cryptography"
+        if "requests.get(" in code_lower or "urllib." in code_lower:
+            return "Potential SSRF / Open Redirect"
+            
         return "Vulnerable Code"
         
     def calculate_metrics(self, raw_code: str) -> dict:
@@ -165,6 +171,41 @@ class CodeScanner:
         
         return [has_eval, has_system, has_sql, has_format_sql, has_xss]
 
+    def _heuristic_verification(self, code_string: str, vuln_type: str) -> bool:
+        """
+        Guardrail to reduce false positives.
+        Returns True if the heuristic confirms the vulnerability, False if it overrides it as Safe.
+        """
+        code_lower = code_string.lower()
+        
+        has_execute = ".execute(" in code_lower or ".executemany(" in code_lower or "cursor(" in code_lower
+        has_sql = any(k in code_lower for k in ["select ", "insert ", "update ", "delete ", "drop "])
+        has_sql_format = any(fmt in code_lower for fmt in ["f'", 'f"', "%", ".format(", " + ", "{}"])
+        has_system = any(cmd in code_lower for cmd in ["os.system", "os.popen", "subprocess.", "popen(", "sys.call"])
+        has_eval = "eval(" in code_lower or "exec(" in code_lower
+        has_xss = "render_template" in code_lower or "markup(" in code_lower or "send_file(" in code_lower
+        has_crypto = "hashlib" in code_lower or "md5" in code_lower or "sha1" in code_lower or "base64" in code_lower
+        has_network = "requests." in code_lower or "urllib" in code_lower or "socket" in code_lower
+
+        if vuln_type == "SQL Injection":
+            if not (has_execute and has_sql and has_sql_format): return False
+        elif vuln_type == "Command Injection":
+            if not has_system: return False
+        elif vuln_type == "Unsafe eval() usage":
+            if not has_eval: return False
+        elif vuln_type == "Cross-Site Scripting (XSS)":
+            if not has_xss: return False
+        elif vuln_type == "Weak Cryptography":
+            if not has_crypto: return False
+        elif vuln_type == "Potential SSRF / Open Redirect":
+            if not has_network: return False
+        else:
+            # For general "Vulnerable Code", require at least one major indicator
+            if not (has_execute or has_system or has_eval or has_xss or has_crypto or has_network):
+                return False
+                
+        return True
+
     def scan_code_snippet(self, raw_code):
         """
         Takes raw Python code, preprocesses it, vectorizes it, and predicts vulnerabilities.
@@ -198,6 +239,11 @@ class CodeScanner:
         # 7. Classify using the calibrated threshold
         if prob >= self.threshold:
             vuln_type = self.identify_vuln_type(raw_code)
+            
+            # 8. Run Heuristic Guardrail
+            if not self._heuristic_verification(raw_code, vuln_type):
+                return "Safe Code", float(1.0 - prob)
+                
             confidence = prob
             return vuln_type, float(confidence)
         else:

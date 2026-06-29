@@ -12,9 +12,33 @@ import tempfile
 import zipfile
 import io
 import requests
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from app.scanner import CodeScanner
 
+# Global variable for the worker process to hold the loaded ML model
+_worker_scanner = None
+
+def init_worker():
+    global _worker_scanner
+    # Initialize the model once per worker process to avoid pickling overhead
+    _worker_scanner = CodeScanner()
+
+def scan_file_worker(root: str, file: str, repo_dir: str) -> dict | None:
+    """Scan a single Python file using the global worker scanner."""
+    file_path = os.path.join(root, file)
+    try:
+        with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+            raw_code = f.read()
+        vuln_type, confidence = _worker_scanner.scan_code_snippet(raw_code)
+        clean_name = file_path.replace(repo_dir, "").lstrip("/\\")
+        return {
+            "file":          clean_name,
+            "vulnerability": vuln_type,
+            "confidence":    confidence,
+            "code":          raw_code
+        }
+    except Exception:
+        return None
 
 class GitHubScanner:
     def __init__(self):
@@ -31,10 +55,18 @@ class GitHubScanner:
 
         with tempfile.TemporaryDirectory() as tmp:
             # Choose download method
+            repo_dir = None
             if shutil.which("git"):
-                repo_dir = self._clone_via_git(github_url, tmp)
-            else:
-                repo_dir = self._download_via_zip(github_url, tmp)
+                try:
+                    repo_dir = self._clone_via_git(github_url, tmp)
+                except subprocess.CalledProcessError:
+                    repo_dir = None
+                    
+            if not repo_dir:
+                try:
+                    repo_dir = self._download_via_zip(github_url, tmp)
+                except Exception as e:
+                    raise ValueError(f"Failed to access repository: {github_url}. It may be private, deleted, or invalid.")
 
             return self._scan_directory(github_url, repo_dir)
 
@@ -83,25 +115,7 @@ class GitHubScanner:
             return os.path.join(extract_dir, children[0])
         return extract_dir
 
-    # ── Scan engine ─────────────────────────────────────────────────────────────
-    def _scan_single_file(self, root: str, file: str, repo_dir: str) -> dict | None:
-        """Scan a single Python file and return vulnerability details if found."""
-        file_path = os.path.join(root, file)
-        try:
-            with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
-                raw_code = f.read()
-            vuln_type, confidence = self.engine.scan_code_snippet(raw_code)
-            if vuln_type != "Safe Code":
-                clean_name = file_path.replace(repo_dir, "").lstrip("/\\")
-                return {
-                    "file":          clean_name,
-                    "vulnerability": vuln_type,
-                    "confidence":    confidence,
-                    "code":          raw_code
-                }
-        except Exception:
-            pass
-        return None
+
 
     def _scan_directory(self, github_url: str, repo_dir: str) -> dict:
         file_tasks = []
@@ -113,13 +127,13 @@ class GitHubScanner:
         vulnerabilities = []
         files_scanned = len(file_tasks)
         
-        # Parallelize lexical analysis and model predictions using thread pool
-        with ThreadPoolExecutor(max_workers=8) as executor:
+        # Parallelize lexical analysis and model predictions using true multiprocessing
+        with ProcessPoolExecutor(max_workers=max(1, os.cpu_count() - 1), initializer=init_worker) as executor:
             futures = [
-                executor.submit(self._scan_single_file, root, file, repo_dir)
+                executor.submit(scan_file_worker, root, file, repo_dir)
                 for root, file in file_tasks
             ]
-            for fut in futures:
+            for fut in as_completed(futures):
                 res = fut.result()
                 if res is not None:
                     vulnerabilities.append(res)
