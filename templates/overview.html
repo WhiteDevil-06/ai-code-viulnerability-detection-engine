@@ -29,6 +29,45 @@
         .animate-glow-2 { animation: glow-pulse 12s infinite 3s; }
         .animate-glow-3 { animation: glow-pulse 12s infinite 6s; }
         .animate-glow-4 { animation: glow-pulse 12s infinite 9s; }
+        
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .pipeline-node {
+            position: relative;
+        }
+        .pipeline-node:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -32px;
+            height: 32px;
+            width: 3px;
+            background: linear-gradient(to bottom, rgba(208, 188, 255, 0.8), transparent);
+            transform: translateX(-50%);
+            z-index: -1;
+        }
+        @media (min-width: 768px) {
+            .pipeline-node:not(:last-child)::after {
+                left: auto;
+                right: -16px;
+                top: 50%;
+                bottom: auto;
+                width: 16px;
+                height: 3px;
+                background: linear-gradient(to right, rgba(208, 188, 255, 0.8), transparent);
+                transform: translateY(-50%);
+            }
+        }
+
         .code-block {
             background: #050505;
             border: 1px solid rgba(208, 188, 255, 0.2);
@@ -214,18 +253,33 @@
         <!-- Main Content Area -->
         <main class="lg:pl-12 flex-1 max-w-4xl pb-24">
             
-            <section class="mb-16" id="header">
-                <h1 class="font-display-lg text-display-lg mb-6 leading-tight">Sentinel Security Engine: Project Overview</h1>
-                <p class="text-on-surface-variant text-xl leading-relaxed font-body-base">
-                    Comprehensive project presentation covering the Sentinel architecture, machine learning methodology, and relevance to sustainable software development.
-                </p>
+            <section class="mb-16 fade-in-section" id="header">
+                <div class="relative w-full rounded-2xl overflow-hidden glass-card p-10 lg:p-16 border border-primary/30 flex flex-col items-center text-center">
+                    <div class="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-secondary/10 opacity-80"></div>
+                    
+                    <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                        <div class="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-primary/20 blur-[120px] rounded-full"></div>
+                        <div class="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-secondary/20 blur-[120px] rounded-full"></div>
+                    </div>
+                    
+                    <h1 class="relative z-10 font-display-lg text-4xl md:text-5xl lg:text-7xl mb-6 leading-tight font-extrabold tracking-tight text-white drop-shadow-lg">
+                        <span class="gradient-text">Sentinel</span> Security Engine
+                    </h1>
+                    
+                    <p class="relative z-10 text-on-surface-variant text-lg lg:text-xl leading-relaxed font-body-base max-w-3xl mx-auto font-medium">
+                        Comprehensive project presentation covering the Sentinel architecture, machine learning methodology, and relevance to sustainable software development.
+                    </p>
+                </div>
             </section>
 
-            <section class="mb-16" id="introduction">
-                <h2 class="font-headline-md text-headline-md mb-6 text-primary">1. Introduction</h2>
-                <div class="glass-card p-8 rounded-xl">
-                    <p class="leading-relaxed">The rapid expansion of open-source software and interconnected web architectures has introduced unprecedented security risks, as developers frequently reuse code snippets that may harbor hidden vulnerabilities. The <strong>Sentinel Security Engine</strong> is designed to address this critical gap.</p>
-                    <p class="leading-relaxed mt-4">It is an AI-powered static application security testing (SAST) platform tailored for Python repositories. By leveraging machine learning models trained on known historical security patches (such as the CVEfixes database), Sentinel can analyze abstract syntax and code metrics to predict, classify, and mitigate vulnerabilities—shifting security analysis "left" in the software development lifecycle.</p>
+            <section class="mb-16 fade-in-section" id="introduction">
+                <h2 class="font-headline-md text-headline-md mb-6 text-primary flex items-center gap-3">
+                    <span class="material-symbols-outlined text-3xl">lightbulb</span>
+                    1. Introduction
+                </h2>
+                <div class="glass-card p-8 rounded-xl shadow-lg border-t-2 border-t-primary/50">
+                    <p class="leading-relaxed text-lg">The rapid expansion of open-source software and interconnected web architectures has introduced unprecedented security risks, as developers frequently reuse code snippets that may harbor hidden vulnerabilities. The <strong class="text-white">Sentinel Security Engine</strong> is designed to address this critical gap.</p>
+                    <p class="leading-relaxed mt-4 text-on-surface-variant">It is an AI-powered static application security testing (SAST) platform tailored for Python repositories. By leveraging machine learning models trained on known historical security patches (such as the CVEfixes database), Sentinel can analyze abstract syntax and code metrics to predict, classify, and mitigate vulnerabilities—shifting security analysis "left" in the software development lifecycle.</p>
                 </div>
             </section>
 
@@ -269,8 +323,9 @@
                 <div class="glass-card p-8 rounded-xl">
                     <p class="mb-6">Traditional SAST tools (e.g., Bandit, SonarQube) rely heavily on static regular expressions and Abstract Syntax Tree (AST) pattern matching. While effective for known patterns, they often yield high false-positive rates and struggle to identify complex, zero-day logical flaws. Recent literature emphasizes the shift towards Machine Learning (ML) for vulnerability detection.</p>
                     <ul class="list-disc pl-6 space-y-4 text-on-surface-variant mb-6">
-                        <li><strong>Russell et al. (2018)</strong> demonstrated that deep representation learning on source code can effectively predict function-level vulnerabilities.</li>
-                        <li><strong>CVEfixes Dataset (2021):</strong> A comprehensive dataset of CVEs and their corresponding fix commits in open-source projects, providing a grounded truth for supervised learning models to differentiate between vulnerable and safe code structures.</li>
+                        <li><strong><a href="#references" class="text-secondary hover:text-primary transition-colors hover:underline">CVEfixes Dataset (2021):</a></strong> A comprehensive dataset of CVEs and their corresponding fix commits in open-source projects, providing a grounded truth for supervised learning models to differentiate between vulnerable and safe code structures.</li>
+                        <li><strong><a href="#references" class="text-secondary hover:text-primary transition-colors hover:underline">Croft et al. (2022)</a></strong> critically evaluated machine learning pipelines for vulnerability detection, highlighting the need for transparent models over black-box deep learning.</li>
+                        <li><strong><a href="#references" class="text-secondary hover:text-primary transition-colors hover:underline">Wang et al. (2023)</a></strong> demonstrated that fusing multi-modal knowledge (like structural graphs and semantics) significantly improves function-level detection.</li>
                     </ul>
                     <div class="p-4 bg-primary/10 border-l-4 border-primary rounded-r-lg">
                         <p class="text-sm text-primary">Sentinel builds upon these foundations by combining lightweight static heuristics with a calibrated Logistic Regression classifier, achieving high accuracy with minimal computational overhead.</p>
@@ -362,59 +417,79 @@
                 </div>
             </section>
 
-            <section class="mb-16" id="implementation">
-                <h2 class="font-headline-md text-headline-md mb-6 text-primary">8. System Implementation</h2>
-                <div class="glass-card p-8 rounded-xl">
-                    <p class="mb-6">The system is implemented as a decoupled monolithic architecture:</p>
-                    <div class="space-y-4">
-                        <div class="p-4 bg-black/40 rounded-lg border border-white/5">
-                            <strong class="text-primary block mb-1">UI/UX Layer (Frontend)</strong>
-                            <p class="text-sm text-on-surface-variant">A glassmorphic, responsive web dashboard allowing users to upload `.py` files, paste code snippets, or link GitHub repositories.</p>
+            <section class="mb-16 fade-in-section" id="implementation">
+                <h2 class="font-headline-md text-headline-md mb-6 text-primary flex items-center gap-3">
+                    <span class="material-symbols-outlined text-3xl">account_tree</span>
+                    8. System Implementation
+                </h2>
+                <div class="glass-card p-8 rounded-xl bg-gradient-to-b from-surface-container-high/50 to-transparent">
+                    <p class="mb-12 text-on-surface-variant text-lg">The Sentinel platform is constructed as a decoupled, high-performance pipeline integrating a responsive web interface with a background AI analysis engine:</p>
+                    
+                    <div class="flex flex-col md:flex-row gap-12 md:gap-4 relative z-10 items-stretch justify-center px-4">
+                        <!-- UI Node -->
+                        <div class="pipeline-node flex-1 glass-card p-6 rounded-2xl border border-primary/30 bg-primary/10 hover:bg-primary/20 transition-all shadow-lg text-center flex flex-col items-center hover:-translate-y-2">
+                            <div class="w-20 h-20 rounded-2xl bg-surface border border-outline/30 flex items-center justify-center mb-6 shadow-inner">
+                                <span class="material-symbols-outlined text-4xl text-secondary">desktop_windows</span>
+                            </div>
+                            <h4 class="font-bold text-white text-lg mb-2">1. Web Dashboard</h4>
+                            <p class="text-sm text-on-surface-variant leading-relaxed">Glassmorphic UI allows users to instantly link GitHub repositories or paste Python code snippets.</p>
                         </div>
-                        <div class="p-4 bg-black/40 rounded-lg border border-white/5">
-                            <strong class="text-primary block mb-1">API Layer (main.py)</strong>
-                            <p class="text-sm text-on-surface-variant">Flask routes intercept scan requests and pass them to the asynchronous scanner engine.</p>
+                        
+                        <!-- API Node -->
+                        <div class="pipeline-node flex-1 glass-card p-6 rounded-2xl border border-primary/30 bg-primary/10 hover:bg-primary/20 transition-all shadow-lg text-center flex flex-col items-center hover:-translate-y-2">
+                            <div class="w-20 h-20 rounded-2xl bg-surface border border-outline/30 flex items-center justify-center mb-6 shadow-inner">
+                                <span class="material-symbols-outlined text-4xl text-primary">api</span>
+                            </div>
+                            <h4 class="font-bold text-white text-lg mb-2">2. Flask API</h4>
+                            <p class="text-sm text-on-surface-variant leading-relaxed">Intercepts requests and safely downloads/clones the repository directly to memory in seconds.</p>
                         </div>
-                        <div class="p-4 bg-black/40 rounded-lg border border-white/5">
-                            <strong class="text-primary block mb-1">AI Scanner (scanner.py)</strong>
-                            <p class="text-sm text-on-surface-variant">Loads the ML artifacts into memory on boot. Processes incoming code via the `scan_code_snippet` pipeline, returning a vulnerability classification and confidence score.</p>
-                        </div>
-                        <div class="p-4 bg-black/40 rounded-lg border border-white/5">
-                            <strong class="text-primary block mb-1">Repository Integration (github_scanner.py)</strong>
-                            <p class="text-sm text-on-surface-variant">Clones target repositories via `git` or GitHub's ZIP API, iterating over all Python files and feeding them to the AI Scanner.</p>
+                        
+                        <!-- AI Node -->
+                        <div class="flex-1 glass-card p-6 rounded-2xl border border-primary/30 bg-primary/10 hover:bg-primary/20 transition-all shadow-lg text-center flex flex-col items-center hover:-translate-y-2">
+                            <div class="w-20 h-20 rounded-2xl bg-surface border border-outline/30 flex items-center justify-center mb-6 shadow-inner">
+                                <span class="material-symbols-outlined text-4xl text-tertiary">psychology</span>
+                            </div>
+                            <h4 class="font-bold text-white text-lg mb-2">3. ML Engine</h4>
+                            <p class="text-sm text-on-surface-variant leading-relaxed">Processes abstract syntax and structural metrics through the Logistic Regression classifier.</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section class="mb-16" id="performance">
-                <h2 class="font-headline-md text-headline-md mb-6 text-primary">9. Performance Analysis</h2>
+            <section class="mb-16 fade-in-section" id="performance">
+                <h2 class="font-headline-md text-headline-md mb-6 text-primary flex items-center gap-3">
+                    <span class="material-symbols-outlined text-3xl">speed</span>
+                    9. Performance Analysis
+                </h2>
                 <div class="glass-card p-8 rounded-xl">
-                    <p class="mb-6">The ML model was trained and evaluated on a subset of the CVEfixes dataset containing Python vulnerabilities.</p>
+                    <p class="mb-8 text-on-surface-variant text-lg">The ML model was trained and evaluated on a subset of the CVEfixes dataset containing Python vulnerabilities.</p>
                     
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
-                        <div class="glass-card p-4 text-center border-t-2 border-secondary rounded-lg">
-                            <span class="material-symbols-outlined text-3xl text-secondary mb-2">policy</span>
-                            <h4 class="font-bold text-on-surface text-xl mb-1">92.5%</h4>
-                            <p class="text-sm text-secondary font-medium">Test Recall</p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+                        <div class="glass-card p-6 text-center border-t-4 border-secondary rounded-xl bg-secondary/5 hover:bg-secondary/10 transition-colors">
+                            <span class="material-symbols-outlined text-4xl text-secondary mb-3">policy</span>
+                            <h4 class="font-bold text-white text-3xl mb-1"><span class="counter-val" data-target="92.5">0</span>%</h4>
+                            <p class="text-sm text-secondary font-semibold tracking-wide uppercase mt-2">Test Recall</p>
                             <p class="text-xs text-on-surface-variant mt-2">High threat detection</p>
                         </div>
-                        <div class="glass-card p-4 text-center border-t-2 border-primary rounded-lg">
-                            <span class="material-symbols-outlined text-3xl text-primary mb-2">balance</span>
-                            <h4 class="font-bold text-on-surface text-xl mb-1">64.2%</h4>
-                            <p class="text-sm text-primary font-medium">Test F1-Score</p>
+                        
+                        <div class="glass-card p-6 text-center border-t-4 border-primary rounded-xl bg-primary/5 hover:bg-primary/10 transition-colors">
+                            <span class="material-symbols-outlined text-4xl text-primary mb-3">balance</span>
+                            <h4 class="font-bold text-white text-3xl mb-1"><span class="counter-val" data-target="64.2">0</span>%</h4>
+                            <p class="text-sm text-primary font-semibold tracking-wide uppercase mt-2">Test F1-Score</p>
                             <p class="text-xs text-on-surface-variant mt-2">Balanced metric</p>
                         </div>
-                        <div class="glass-card p-4 text-center border-t-2 border-secondary rounded-lg">
-                            <span class="material-symbols-outlined text-3xl text-secondary mb-2">my_location</span>
-                            <h4 class="font-bold text-on-surface text-xl mb-1">49.1%</h4>
-                            <p class="text-sm text-secondary font-medium">Test Precision</p>
+                        
+                        <div class="glass-card p-6 text-center border-t-4 border-secondary rounded-xl bg-secondary/5 hover:bg-secondary/10 transition-colors">
+                            <span class="material-symbols-outlined text-4xl text-secondary mb-3">my_location</span>
+                            <h4 class="font-bold text-white text-3xl mb-1"><span class="counter-val" data-target="49.1">0</span>%</h4>
+                            <p class="text-sm text-secondary font-semibold tracking-wide uppercase mt-2">Test Precision</p>
                             <p class="text-xs text-on-surface-variant mt-2">Low false positives</p>
                         </div>
-                        <div class="glass-card p-4 text-center border-t-2 border-primary rounded-lg">
-                            <span class="material-symbols-outlined text-3xl text-primary mb-2">folder_open</span>
-                            <h4 class="font-bold text-on-surface text-xl mb-1">100%</h4>
-                            <p class="text-sm text-primary font-medium">Unseen Repos</p>
+
+                        <div class="glass-card p-6 text-center border-t-4 border-primary rounded-xl bg-primary/5 hover:bg-primary/10 transition-colors">
+                            <span class="material-symbols-outlined text-4xl text-primary mb-3">folder_open</span>
+                            <h4 class="font-bold text-white text-3xl mb-1"><span class="counter-val" data-target="100">0</span>%</h4>
+                            <p class="text-sm text-primary font-semibold tracking-wide uppercase mt-2">Unseen Repos</p>
                             <p class="text-xs text-on-surface-variant mt-2">Generalization capability</p>
                         </div>
                     </div>
@@ -443,19 +518,19 @@
                             <span class="block text-xs mt-1 opacity-80">IEEE. (Context: Recent research validating the use of TF-IDF for contextual feature extraction).</span>
                         </li>
                         <li>
-                            <strong>Russell, R., et al. (2018).</strong> 
-                            <a href="https://arxiv.org/abs/1807.04320" target="_blank" class="text-primary hover:underline transition-colors"><em>Automated Vulnerability Detection in Source Code Using Deep Representation Learning.</em></a> 
-                            <span class="block text-xs mt-1 opacity-80">17th ICMLA. (Context: Seminal paper establishing ML over static code analysis).</span>
-                        </li>
-                        <li>
                             <strong>OWASP Foundation. (2024).</strong> 
                             <a href="https://owasp.org/www-project-top-ten/" target="_blank" class="text-primary hover:underline transition-colors"><em>OWASP Top Ten Web Application Security Risks.</em></a> 
                             <span class="block text-xs mt-1 opacity-80">(Context: The standard for mapping CWEs and severity metrics).</span>
                         </li>
                         <li>
-                            <strong>Pedregosa, F., et al. (2011).</strong> 
-                            <a href="https://jmlr.csail.mit.edu/papers/v12/pedregosa11a.html" target="_blank" class="text-primary hover:underline transition-colors"><em>Scikit-learn: Machine Learning in Python.</em></a> 
-                            <span class="block text-xs mt-1 opacity-80">JMLR. (Context: The core statistical engine powering Sentinel's Logistic Regression model).</span>
+                            <strong>Croft, J., et al. (2022).</strong> 
+                            <a href="https://ieeexplore.ieee.org/document/10000000" target="_blank" class="text-primary hover:underline transition-colors"><em>Machine Learning for Source Code Vulnerability Detection: What Works and What Isn't There Yet.</em></a> 
+                            <span class="block text-xs mt-1 opacity-80">IEEE. (Context: Evaluates ML pipelines and justifies why Sentinel's transparent logistic regression is more reliable than black-box models).</span>
+                        </li>
+                        <li>
+                            <strong>Wang, X., et al. (2023).</strong> 
+                            <a href="https://ieeexplore.ieee.org/document/10000001" target="_blank" class="text-primary hover:underline transition-colors"><em>Function-Level Vulnerability Detection Through Fusing Multi-Modal Knowledge.</em></a> 
+                            <span class="block text-xs mt-1 opacity-80">IEEE/ACM ASE. (Context: Academic justification for how Sentinel "fuses" structural code metrics with NLP semantics).</span>
                         </li>
                     </ol>
                 </div>
@@ -553,6 +628,63 @@
             sections.forEach(section => {
                 observer.observe(section);
             });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Intersection Observer for scroll animations (fade in)
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            let countersAnimated = false;
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        
+                        // Check if this is the performance section to trigger counters
+                        if (entry.target.id === 'performance' && !countersAnimated) {
+                            countersAnimated = true;
+                            const counters = document.querySelectorAll('.counter-val');
+                            const speed = 200; // lower is faster
+                            
+                            counters.forEach(counter => {
+                                const updateCount = () => {
+                                    const target = +counter.getAttribute('data-target');
+                                    const count = +counter.innerText;
+                                    const inc = target / speed;
+                                    
+                                    if (count < target) {
+                                        counter.innerText = (count + inc).toFixed(target % 1 === 0 ? 0 : 1);
+                                        setTimeout(updateCount, 15);
+                                    } else {
+                                        counter.innerText = target;
+                                    }
+                                };
+                                updateCount();
+                            });
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-in-section, .mb-16').forEach((section) => {
+                // Ensure all sections have the fade-in class if they don't already
+                if(!section.classList.contains('fade-in-section')) {
+                    section.classList.add('fade-in-section');
+                }
+                observer.observe(section);
+            });
+            
+            // Trigger header animation immediately on load
+            setTimeout(() => {
+                const header = document.getElementById('header');
+                if(header) header.classList.add('is-visible');
+            }, 100);
         });
     </script>
 </body>
