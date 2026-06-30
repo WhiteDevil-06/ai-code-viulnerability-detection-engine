@@ -39,6 +39,9 @@ class GitHubScanner:
             except Exception as e:
                 print(f"[*] ZIP download failed: {e}. Falling back to git clone...")
                 repo_dir = None
+                if "Repository not found" in str(e):
+                    # If GitHub API explicitly says 404, git clone will also fail or hang on password prompt.
+                    raise ValueError(f"Repository not found: {github_url}. Is it public?")
 
             # Fallback to git clone if ZIP failed
             if not repo_dir and shutil.which("git"):
@@ -61,11 +64,18 @@ class GitHubScanner:
     def _clone_via_git(self, github_url: str, tmp_dir: str) -> str:
         """Try git clone. Raises on failure so caller can catch and fallback."""
         repo_dir = os.path.join(tmp_dir, "repo")
+        
+        # Disable credential prompts to prevent infinite hangs on invalid/private repos
+        env = os.environ.copy()
+        env["GIT_TERMINAL_PROMPT"] = "0"
+        
         subprocess.run(
             ["git", "clone", "--depth", "1", github_url, repo_dir],
             capture_output=True,
             text=True,
-            check=True
+            check=True,
+            env=env,
+            timeout=30
         )
         return repo_dir
 
@@ -84,7 +94,8 @@ class GitHubScanner:
         zip_url = f"https://api.github.com/repos/{owner}/{repo}/zipball/HEAD"
 
         headers = {"Accept": "application/vnd.github+json", "User-Agent": "VulnScanner-AI"}
-        resp = requests.get(zip_url, headers=headers, timeout=60, allow_redirects=True)
+        # Fail fast after 5 seconds if GitHub API hangs, so we can fall back to git clone immediately
+        resp = requests.get(zip_url, headers=headers, timeout=5, allow_redirects=True)
 
         if resp.status_code == 404:
             raise ValueError(f"Repository not found: {github_url}. Is it public?")

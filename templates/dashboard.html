@@ -185,6 +185,10 @@
                 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline" data-icon="link">link</span>
                 <input id="repo-url-input" class="w-full bg-black/40 border border-outline-variant/30 rounded-lg py-3 pl-12 pr-4 focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" placeholder="https://github.com/organization/secure-api-gateway" type="text"/>
             </div>
+            <div class="text-[11px] text-on-surface-variant/70 mt-1 ml-1 flex items-center gap-1.5 font-medium tracking-wide">
+                <i class="fa-solid fa-circle-info text-primary/70"></i>
+                Note: Sentinel Engine currently only analyzes Python (.py) source code.
+            </div>
         </div>
         <button id="run-analysis-btn" class="bg-primary-container text-on-primary-container px-8 py-3 rounded-lg font-bold flex items-center gap-2 hover:brightness-110 transition-all whitespace-nowrap">
             <span class="material-symbols-outlined" data-icon="bolt" data-weight="fill">bolt</span>
@@ -657,8 +661,12 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // Time and Speed
         document.getElementById('stat-elapsed-time').textContent = timeElapsed.toFixed(2) + "s";
-        const speed = filesCount > 0 && timeElapsed > 0 ? Math.round(filesCount / timeElapsed) : "N/A";
-        document.getElementById('stat-engine-speed').textContent = speed !== "N/A" ? `${speed} files/sec` : "N/A";
+        let speedStr = "N/A";
+        if (filesCount > 0 && timeElapsed > 0) {
+            const rawSpeed = filesCount / timeElapsed;
+            speedStr = rawSpeed < 10 ? rawSpeed.toFixed(1) : Math.round(rawSpeed);
+        }
+        document.getElementById('stat-engine-speed').textContent = speedStr !== "N/A" ? `${speedStr} files/sec` : "N/A";
         
         // Progress Ring
         const ring = document.getElementById('stat-progress-ring');
